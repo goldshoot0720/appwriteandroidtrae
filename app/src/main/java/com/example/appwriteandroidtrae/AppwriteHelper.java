@@ -16,16 +16,14 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AppwriteHelper {
 
     private static final String APPWRITE_ENDPOINT = "https://sgp.cloud.appwrite.io/v1";
     private static final String APPWRITE_PROJECT_ID = "698212e50017eada99c8";
     private static final String APPWRITE_DATABASE_ID = "69821743002139037da1";
-    private static final String APPWRITE_SUBSCRIPTION_COLLECTION_NAME = "subscription";
+    private static final String APPWRITE_SUBSCRIPTION_COLLECTION_ID = "69b24465002d43df9b00";
     private static final String APPWRITE_BANK_COLLECTION_ID = "698217de00124b27ff8a";
     private static final String APPWRITE_ARTICLE_COLLECTION_ID = "6989e1a1003c507a9937";
     private static final String APPWRITE_FOOD_COLLECTION_ID = "6982180a000316b84b3f";
@@ -34,7 +32,6 @@ public class AppwriteHelper {
     private static AppwriteHelper instance;
 
     private final Context context;
-    private final Map<String, String> collectionIdCache = new HashMap<>();
 
     public interface DataCallback<T> {
         void onSuccess(T result);
@@ -340,7 +337,7 @@ public class AppwriteHelper {
     }
 
     private List<SubscriptionItem> fetchSubscriptions() throws Exception {
-        return fetchData(resolveCollectionIdByName(APPWRITE_SUBSCRIPTION_COLLECTION_NAME), this::parseDocuments);
+        return fetchData(APPWRITE_SUBSCRIPTION_COLLECTION_ID, this::parseDocuments);
     }
 
     private List<BankItem> fetchBanks() throws Exception {
@@ -374,7 +371,38 @@ public class AppwriteHelper {
                     + "/collections/" + collectionId
                     + "/documents?limit=" + PAGE_LIMIT + "&offset=" + offset;
 
-            String responseStr = request(path);
+            HttpURLConnection connection = null;
+            String responseStr;
+            try {
+                URL url = new URL(APPWRITE_ENDPOINT + path);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("X-Appwrite-Project", APPWRITE_PROJECT_ID);
+                connection.setConnectTimeout(15000);
+                connection.setReadTimeout(15000);
+
+                int statusCode = connection.getResponseCode();
+                InputStream stream = statusCode >= 200 && statusCode < 300
+                        ? connection.getInputStream()
+                        : connection.getErrorStream();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder responseBuilder = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    responseBuilder.append(line);
+                }
+                reader.close();
+
+                if (statusCode < 200 || statusCode >= 300) {
+                    throw new Exception("HTTP " + statusCode + ": " + responseBuilder);
+                }
+                responseStr = responseBuilder.toString();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+            }
 
             List<T> pageItems = parser.parse(responseStr);
             allItems.addAll(pageItems);
@@ -387,73 +415,6 @@ public class AppwriteHelper {
         }
 
         return allItems;
-    }
-
-    private String resolveCollectionIdByName(String collectionName) throws Exception {
-        synchronized (collectionIdCache) {
-            String cachedId = collectionIdCache.get(collectionName);
-            if (cachedId != null && !cachedId.isEmpty()) {
-                return cachedId;
-            }
-        }
-
-        String response = request("/databases/" + APPWRITE_DATABASE_ID + "/collections");
-        JSONObject root = new JSONObject(response);
-        JSONArray collections = root.optJSONArray("collections");
-        if (collections == null) {
-            throw new Exception("No collections were returned for database " + APPWRITE_DATABASE_ID);
-        }
-
-        for (int i = 0; i < collections.length(); i++) {
-            JSONObject collection = collections.getJSONObject(i);
-            String name = collection.optString("name", "");
-            if (collectionName.equals(name)) {
-                String collectionId = collection.optString("$id", "");
-                if (collectionId.isEmpty()) {
-                    throw new Exception("Collection '" + collectionName + "' does not have a valid ID.");
-                }
-                synchronized (collectionIdCache) {
-                    collectionIdCache.put(collectionName, collectionId);
-                }
-                return collectionId;
-            }
-        }
-
-        throw new Exception("Collection named '" + collectionName + "' was not found.");
-    }
-
-    private String request(String path) throws Exception {
-        HttpURLConnection connection = null;
-        try {
-            URL url = new URL(APPWRITE_ENDPOINT + path);
-            connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("X-Appwrite-Project", APPWRITE_PROJECT_ID);
-            connection.setConnectTimeout(15000);
-            connection.setReadTimeout(15000);
-
-            int statusCode = connection.getResponseCode();
-            InputStream stream = statusCode >= 200 && statusCode < 300
-                    ? connection.getInputStream()
-                    : connection.getErrorStream();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            StringBuilder responseBuilder = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                responseBuilder.append(line);
-            }
-            reader.close();
-
-            if (statusCode < 200 || statusCode >= 300) {
-                throw new Exception("HTTP " + statusCode + ": " + responseBuilder);
-            }
-            return responseBuilder.toString();
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-        }
     }
 
     private List<SubscriptionItem> parseDocuments(String json) throws JSONException {
