@@ -32,6 +32,8 @@ public class BootReceiver extends BroadcastReceiver {
 
             // 排程每日背景檢查
             scheduleDailySubscriptionCheck(context);
+            OilPriceScheduler.enqueueImmediateFetch(context);
+            OilPriceScheduler.scheduleDailyFetch(context);
         }
     }
 

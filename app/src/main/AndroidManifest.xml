@@ -55,6 +55,12 @@
             android:label="鋒兄常用"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".OilMonitorActivity"
+            android:exported="false"
+            android:label="石油監控"
+            android:parentActivityName=".MainActivity" />
+
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"

@@ -87,7 +87,10 @@ public class FengCommonActivity extends AppCompatActivity {
         categoryMap.clear();
         categories.clear();
         for (AppwriteHelper.CommonAccountItem item : items) {
-            String cat = (item.category != null && !item.category.isEmpty()) ? item.category : "未分類";
+            String cat = item.category != null ? item.category.trim() : "";
+            if (cat.isEmpty()) {
+                continue;
+            }
             if (!categoryMap.containsKey(cat)) {
                 categoryMap.put(cat, new ArrayList<>());
                 categories.add(cat);
@@ -156,7 +159,7 @@ public class FengCommonActivity extends AppCompatActivity {
             String cat = categories.get(groupPosition);
             textName.setText(cat);
             List<AppwriteHelper.CommonAccountItem> list = categoryMap.get(cat);
-            textType.setText(list != null ? String.valueOf(list.size()) + " 項" : "");
+            textType.setText(list != null ? list.size() + " 項" : "");
 
             return convertView;
         }

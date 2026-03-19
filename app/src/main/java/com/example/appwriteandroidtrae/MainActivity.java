@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Setup cards
         View cardSubscription = findViewById(R.id.cardSubscription);
+        View cardOilMonitor = findViewById(R.id.cardOilMonitor);
         View cardBankStats = findViewById(R.id.cardBankStats);
         View cardFoodManagement = findViewById(R.id.cardFoodManagement);
         View cardFengNotes = findViewById(R.id.cardFengNotes);
@@ -52,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
 
         cardSubscription.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, SubscriptionActivity.class);
+            startActivity(intent);
+        });
+
+        cardOilMonitor.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, OilMonitorActivity.class);
             startActivity(intent);
         });
 
@@ -74,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, FengCommonActivity.class);
             startActivity(intent);
         });
+
+        OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
+        OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
 
         // Background services
         createNotificationChannel();
