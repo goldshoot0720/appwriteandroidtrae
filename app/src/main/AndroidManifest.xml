@@ -55,6 +55,12 @@
             android:label="@string/feature_common"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".OilMonitorActivity"
+            android:exported="false"
+            android:label="@string/feature_oil"
+            android:parentActivityName=".MainActivity" />
+
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"

@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +22,6 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import java.util.Calendar;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,11 +50,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        TextView textDateBadge = findViewById(R.id.textDateBadge);
-        Calendar today = Calendar.getInstance();
-        textDateBadge.setText(String.format(Locale.US, "%1$tb %1$td", today));
-
         View cardSubscription = findViewById(R.id.cardSubscription);
+        View cardOilMonitor = findViewById(R.id.cardOilMonitor);
         View cardBankStats = findViewById(R.id.cardBankStats);
         View cardFoodManagement = findViewById(R.id.cardFoodManagement);
         View cardFengNotes = findViewById(R.id.cardFengNotes);
@@ -64,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
 
         cardSubscription.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, SubscriptionActivity.class)));
+
+        cardOilMonitor.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, OilMonitorActivity.class)));
 
         cardBankStats.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, BankStatsActivity.class)));
@@ -76,6 +74,9 @@ public class MainActivity extends AppCompatActivity {
 
         cardFengCommon.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, FengCommonActivity.class)));
+
+        OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
+        OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
 
         createNotificationChannel();
         ensureNotificationPermission();
