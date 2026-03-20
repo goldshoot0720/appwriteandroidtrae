@@ -65,15 +65,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader" />
 
-    <ExpandableListView
-        android:id="@+id/expandableListView"
+    <ListView
+        android:id="@+id/listViewCommon"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:childDivider="@android:color/transparent"
         android:clipToPadding="false"
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
-        android:groupIndicator="@null"
         android:paddingStart="8dp"
         android:paddingTop="14dp"
         android:paddingEnd="8dp"
