@@ -20,6 +20,7 @@ public class BankStatsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ListView listView;
     private TextView textViewError;
+    private TextView textTotalDeposit;
     private BankAdapter adapter;
     private final List<AppwriteHelper.BankItem> bankItems = new ArrayList<>();
 
@@ -41,6 +42,7 @@ public class BankStatsActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.listViewBanks);
         textViewError = findViewById(R.id.textViewError);
+        textTotalDeposit = findViewById(R.id.textTotalDeposit);
 
         adapter = new BankAdapter(this, bankItems);
         listView.setAdapter(adapter);
@@ -66,6 +68,7 @@ public class BankStatsActivity extends AppCompatActivity {
                             progressBar.setVisibility(View.GONE);
                             bankItems.clear();
                             bankItems.addAll(result);
+                            updateSummary(result);
                             adapter.notifyDataSetChanged();
                         });
                     }
@@ -79,6 +82,14 @@ public class BankStatsActivity extends AppCompatActivity {
                         });
                     }
                 });
+    }
+
+    private void updateSummary(List<AppwriteHelper.BankItem> items) {
+        long totalDeposit = 0L;
+        for (AppwriteHelper.BankItem item : items) {
+            totalDeposit += item.deposit;
+        }
+        textTotalDeposit.setText(String.valueOf(totalDeposit));
     }
 
     private static class BankAdapter extends ArrayAdapter<AppwriteHelper.BankItem> {

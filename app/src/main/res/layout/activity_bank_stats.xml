@@ -65,6 +65,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardBankSummary"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        app:cardBackgroundColor="@color/surface_high"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/surface_outline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="總存款"
+                android:textColor="@color/slate_700"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/textTotalDeposit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="0"
+                android:textColor="@color/slate_950"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
     <ListView
         android:id="@+id/listViewBanks"
         android:layout_width="0dp"
@@ -73,13 +114,13 @@
         android:divider="@android:color/transparent"
         android:dividerHeight="0dp"
         android:paddingStart="8dp"
-        android:paddingTop="14dp"
+        android:paddingTop="10dp"
         android:paddingEnd="8dp"
         android:paddingBottom="24dp"
         app:layout_constraintBottom_toTopOf="@id/textViewError"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader" />
+        app:layout_constraintTop_toBottomOf="@id/cardBankSummary" />
 
     <TextView
         android:id="@+id/textViewError"
