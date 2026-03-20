@@ -1,0 +1,82 @@
+<resources>
+    <string name="app_name">生活中樞</string>
+
+    <string name="feature_subscription">訂閱管理</string>
+    <string name="feature_bank">銀行統計</string>
+    <string name="feature_food">食物管理</string>
+    <string name="feature_notes">鋒兄筆記</string>
+    <string name="feature_common">鋒兄常用</string>
+
+    <string name="main_dashboard_eyebrow">Personal Operations</string>
+    <string name="main_dashboard_title">把每天要記住的事，收進一個安靜而高效的介面。</string>
+    <string name="main_dashboard_subtitle">從訂閱、帳戶、食材到常用資料，首頁現在更像一個指揮中心，而不是傳統功能選單。</string>
+    <string name="main_focus_chip">今日視角</string>
+    <string name="main_date_placeholder">Mar 20</string>
+    <string name="main_focus_title">優先處理最容易被忽略的項目，讓日常維持清晰節奏。</string>
+    <string name="main_focus_body">先檢查即將到期的訂閱與庫存，再快速切換到財務與備忘，資訊會更有層次，也更不容易遺漏。</string>
+    <string name="main_metric_primary_value">05</string>
+    <string name="main_metric_primary_label">核心模組</string>
+    <string name="main_metric_secondary_value">24h</string>
+    <string name="main_metric_secondary_label">每日巡檢節奏</string>
+    <string name="main_section_label">功能入口</string>
+    <string name="main_section_subtitle">每個區塊都保留明確辨識，但視覺上更像同一套產品，而不是各自獨立的頁面跳板。</string>
+    <string name="main_tile_subscription_desc">追蹤續訂時間、費用與提醒節點。</string>
+    <string name="main_tile_bank_desc">整理存提、轉帳與卡片資訊的總覽。</string>
+    <string name="main_tile_food_desc">管理數量、店家與保存期限。</string>
+    <string name="main_tile_notes_desc">收斂零碎靈感與長文筆記。</string>
+    <string name="main_tile_common_desc">把常查資料放進一個更順手的捷徑層。</string>
+    <string name="main_common_chip">Quick Layer</string>
+
+    <string name="main_tile_subscription_emoji">○</string>
+    <string name="main_tile_bank_emoji">◇</string>
+    <string name="main_tile_food_emoji">△</string>
+    <string name="main_tile_notes_emoji">✦</string>
+    <string name="main_tile_common_emoji">→</string>
+
+    <string name="menu_bank_stats">銀行統計</string>
+    <string name="notification_channel_name">訂閱到期提醒</string>
+    <string name="notification_channel_description">每日檢查訂閱資料並建立提醒通知。</string>
+    <string name="ui_error_prefix">載入失敗: </string>
+    <string name="ui_close">知道了</string>
+    <string name="ui_today_due">今天到期</string>
+    <string name="ui_due_tomorrow">明天到期</string>
+    <string name="ui_due_in_two_days">兩天後到期</string>
+    <string name="ui_due_in_days">%1$d 天後到期</string>
+
+    <string name="screen_subscription_eyebrow">Renewal Desk</string>
+    <string name="screen_subscription_subtitle">集中檢查續訂日期、帳號與費用，讓提醒更早一步出現。</string>
+    <string name="screen_bank_eyebrow">Finance Overview</string>
+    <string name="screen_bank_subtitle">用更乾淨的分區看存提、轉帳與卡片資訊。</string>
+    <string name="screen_food_eyebrow">Pantry Flow</string>
+    <string name="screen_food_subtitle">把價格、數量與保存期限排得更清楚，快速看出庫存節奏。</string>
+    <string name="screen_notes_eyebrow">Knowledge Stream</string>
+    <string name="screen_notes_subtitle">讓筆記標題、摘要與連結數量有更好的層次與掃讀速度。</string>
+    <string name="screen_common_eyebrow">Quick Reference</string>
+    <string name="screen_common_subtitle">依分類收斂常用資訊，展開時更容易定位與複製。</string>
+
+    <string name="subscription_alert_title">近期即將續訂</string>
+    <string name="subscription_price_label">費用</string>
+    <string name="subscription_account_label">帳號</string>
+    <string name="subscription_next_date_label">下次扣款</string>
+    <string name="subscription_notification_content">%1$s 續訂 %2$s %3$s</string>
+
+    <string name="bank_unknown_name">未命名銀行</string>
+    <string name="bank_account_label">帳戶</string>
+    <string name="bank_deposit_label">存入</string>
+    <string name="bank_withdraw_label">提出</string>
+    <string name="bank_transfer_label">轉帳</string>
+    <string name="bank_card_label">卡片</string>
+    <string name="bank_address_label">地址</string>
+
+    <string name="food_unknown_name">未命名項目</string>
+    <string name="food_amount_label">數量</string>
+    <string name="food_price_label">價格</string>
+    <string name="food_shop_label">店家</string>
+    <string name="food_expiry_label">到期</string>
+
+    <string name="article_untitled">未命名筆記</string>
+    <string name="article_links_count">%1$d 個連結</string>
+
+    <string name="common_uncategorized">未分類</string>
+    <string name="common_items_count">%1$d 項</string>
+</resources>

@@ -1,0 +1,17 @@
+<resources>
+    <style name="Base.Theme.Appwriteandroidtrae" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/sage_700</item>
+        <item name="colorOnPrimary">@color/sand_50</item>
+        <item name="colorSecondary">@color/accent_gold</item>
+        <item name="colorTertiary">@color/accent_coral</item>
+        <item name="android:colorBackground">@color/surface_base</item>
+        <item name="colorSurface">@color/surface_high</item>
+        <item name="colorOnSurface">@color/slate_950</item>
+        <item name="colorSurfaceVariant">@color/seafoam_100</item>
+        <item name="colorOutline">@color/surface_outline</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/surface_base</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+</resources>
