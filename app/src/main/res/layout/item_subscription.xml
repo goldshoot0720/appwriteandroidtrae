@@ -62,22 +62,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/textNextDate"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:textColor="@color/slate_950"
                 android:textSize="13sp" />
 
             <TextView
-                android:id="@+id/textNote"
-                android:layout_width="0dp"
+                android:id="@+id/textCreatedDate"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
+                android:layout_marginTop="4dp"
+                android:textColor="@color/slate_700"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/textNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/slate_500"
                 android:textSize="13sp" />
         </LinearLayout>

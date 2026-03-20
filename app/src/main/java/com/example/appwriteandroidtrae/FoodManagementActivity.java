@@ -116,10 +116,13 @@ public class FoodManagementActivity extends AppCompatActivity {
                 } else {
                     textShop.setVisibility(View.GONE);
                 }
-                
-                if (item.todateMillis > 0) {
+
+                long visibleDateMillis = item.todateMillis > 0 ? item.todateMillis : item.createdAtMillis;
+                String visibleDateLabel = item.todateMillis > 0 ? "日期" : "建立日期";
+
+                if (visibleDateMillis > 0) {
                     textDate.setVisibility(View.VISIBLE);
-                    textDate.setText("到期: " + dateFormat.format(new Date(item.todateMillis)));
+                    textDate.setText(visibleDateLabel + ": " + dateFormat.format(new Date(visibleDateMillis)));
                 } else {
                     textDate.setVisibility(View.GONE);
                 }

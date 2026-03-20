@@ -59,10 +59,8 @@ public class SubscriptionActivity extends AppCompatActivity {
         adapter = new SubscriptionAdapter(this, subscriptionItems);
         listView.setAdapter(adapter);
 
-        // We create the channel here too just in case, though MainActivity does it.
         createNotificationChannel();
         ensureNotificationPermission();
-        
         loadSubscriptions();
     }
 
@@ -102,11 +100,12 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "訂閱到期提醒";
-            String description = "顯示最近到期的訂閱通知";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "訂閱到期提醒",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            channel.setDescription("顯示最近到期的訂閱通知");
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {
                 manager.createNotificationChannel(channel);
@@ -115,15 +114,14 @@ public class SubscriptionActivity extends AppCompatActivity {
     }
 
     private void ensureNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        REQUEST_POST_NOTIFICATIONS
-                );
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                    REQUEST_POST_NOTIFICATIONS
+            );
         }
     }
 
@@ -134,53 +132,47 @@ public class SubscriptionActivity extends AppCompatActivity {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         for (AppwriteHelper.SubscriptionItem item : items) {
-            if (item.nextDateMillis <= 0L) {
-                continue;
-            }
-            if (!item.continueFlag) {
+            if (item.nextDateMillis <= 0L || !item.continueFlag) {
                 continue;
             }
             if (item.nextDateMillis >= now && item.nextDateMillis <= now + threeDaysMillis) {
                 long daysLeft = TimeUnit.MILLISECONDS.toDays(item.nextDateMillis - now);
                 showExpiryNotification(item, daysLeft);
 
-                // 組合 App 內通知訊息
                 String daysText;
                 if (daysLeft <= 0) {
                     daysText = "今天";
                 } else if (daysLeft == 1) {
                     daysText = "明天";
                 } else if (daysLeft == 2) {
-                    daysText = "後天";
+                    daysText = "兩天後";
                 } else {
                     daysText = daysLeft + " 天後";
                 }
                 String priceText = item.price >= 0 ? String.valueOf(item.price) : "?";
                 String currencyText = (item.currency != null && !item.currency.isEmpty()) ? item.currency : "TWD";
-                alertMessage.append("• ").append(item.name)
-                        .append(" - ").append(daysText).append("扣款")
+                alertMessage.append(item.name)
+                        .append(" - ").append(daysText).append("到期")
                         .append(" (").append(priceText).append(" ").append(currencyText).append(")")
                         .append("\n  ").append(fmt.format(new Date(item.nextDateMillis)))
                         .append("\n\n");
             }
         }
 
-        // 顯示 App 內彈窗通知
         if (alertMessage.length() > 0) {
             new AlertDialog.Builder(this)
-                    .setTitle("訂閱即將到期提醒")
+                    .setTitle("訂閱即將到期")
                     .setMessage(alertMessage.toString().trim())
-                    .setPositiveButton("確定", null)
+                    .setPositiveButton("關閉", null)
                     .show();
         }
     }
 
     private void showExpiryNotification(AppwriteHelper.SubscriptionItem item, long daysLeft) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
 
         String daysText;
@@ -189,13 +181,12 @@ public class SubscriptionActivity extends AppCompatActivity {
         } else if (daysLeft == 1) {
             daysText = "明天";
         } else if (daysLeft == 2) {
-            daysText = "後天";
+            daysText = "兩天後";
         } else {
             daysText = daysLeft + " 天後";
         }
 
-        String title = item.name + " - " + daysText + "扣款";
-
+        String title = item.name + " - " + daysText + "到期";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String dateText = format.format(new Date(item.nextDateMillis));
         String priceText = item.price >= 0 ? String.valueOf(item.price) : "?";
@@ -210,8 +201,7 @@ public class SubscriptionActivity extends AppCompatActivity {
                 .setAutoCancel(true);
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
-        int notificationId = item.id.hashCode();
-        manager.notify(notificationId, builder.build());
+        manager.notify(item.id.hashCode(), builder.build());
     }
 
     private static class SubscriptionAdapter extends ArrayAdapter<AppwriteHelper.SubscriptionItem> {
@@ -233,11 +223,11 @@ public class SubscriptionActivity extends AppCompatActivity {
             TextView textPrice = convertView.findViewById(R.id.textPrice);
             TextView textAccount = convertView.findViewById(R.id.textAccount);
             TextView textNextDate = convertView.findViewById(R.id.textNextDate);
+            TextView textCreatedDate = convertView.findViewById(R.id.textCreatedDate);
             TextView textNote = convertView.findViewById(R.id.textNote);
 
             if (item != null) {
-                String title = item.name != null ? item.name : "";
-                textTitle.setText(title);
+                textTitle.setText(item.name != null ? item.name : "");
 
                 if (item.site != null && !item.site.isEmpty()) {
                     textSubtitle.setVisibility(View.VISIBLE);
@@ -262,10 +252,16 @@ public class SubscriptionActivity extends AppCompatActivity {
 
                 if (item.nextDateMillis > 0L) {
                     textNextDate.setVisibility(View.VISIBLE);
-                    String dateText = dateFormat.format(new Date(item.nextDateMillis));
-                    textNextDate.setText("下次扣款日: " + dateText);
+                    textNextDate.setText("日期: " + dateFormat.format(new Date(item.nextDateMillis)));
                 } else {
                     textNextDate.setVisibility(View.GONE);
+                }
+
+                if (item.createdAtMillis > 0L) {
+                    textCreatedDate.setVisibility(View.VISIBLE);
+                    textCreatedDate.setText("建立日期: " + dateFormat.format(new Date(item.createdAtMillis)));
+                } else {
+                    textCreatedDate.setVisibility(View.GONE);
                 }
 
                 if (item.note != null && !item.note.isEmpty()) {
