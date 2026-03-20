@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/purple_500"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="@android:color/white" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="資料來源: gulfmerc.com 的 OQD Daily Marker Price"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/textLatestPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="最新價格: --"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textLatestDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="報價日期: --"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textLastFetched"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="更新時間: --"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/buttonRefreshOil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="立即抓取" />
+
+            <ProgressBar
+                android:id="@+id/progressBarOil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textOilError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@android:color/holo_red_dark"
+                android:visibility="gone" />
+
+            <com.example.appwriteandroidtrae.OilPriceChartView
+                android:id="@+id/oilPriceChart"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_marginTop="16dp"
+                android:background="@android:color/white" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
