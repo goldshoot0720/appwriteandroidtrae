@@ -34,7 +34,7 @@ public class OilMonitorActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("石油監控");
+            getSupportActionBar().setTitle(R.string.screen_title_oil);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -79,7 +79,7 @@ public class OilMonitorActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     renderHistory(history);
                     textOilError.setVisibility(View.VISIBLE);
-                    textOilError.setText("石油價格抓取失敗: " + error.getMessage());
+                    textOilError.setText(getString(R.string.oil_fetch_error, error.getMessage()));
                 });
             }
         }).start();
@@ -92,15 +92,21 @@ public class OilMonitorActivity extends AppCompatActivity {
         chartView.setPoints(chartData);
 
         if (history.isEmpty()) {
-            textLatestPrice.setText("最新價格: --");
-            textLatestDate.setText("報價日期: --");
-            textLastFetched.setText("更新時間: --");
+            textLatestPrice.setText(R.string.oil_latest_price_empty);
+            textLatestDate.setText(R.string.oil_quote_date_empty);
+            textLastFetched.setText(R.string.oil_last_fetched_empty);
             return;
         }
 
         OilPricePoint latest = history.get(history.size() - 1);
-        textLatestPrice.setText(String.format(Locale.getDefault(), "最新價格: %.2f", latest.price));
-        textLatestDate.setText("報價日期: " + dateFormat.format(new Date(latest.dateMillis)));
-        textLastFetched.setText("更新時間: " + fetchTimeFormat.format(new Date(latest.fetchedAtMillis)));
+        textLatestPrice.setText(getString(R.string.oil_latest_price, latest.price));
+        textLatestDate.setText(getString(
+                R.string.oil_quote_date,
+                dateFormat.format(new Date(latest.dateMillis))
+        ));
+        textLastFetched.setText(getString(
+                R.string.oil_last_fetched,
+                fetchTimeFormat.format(new Date(latest.fetchedAtMillis))
+        ));
     }
 }

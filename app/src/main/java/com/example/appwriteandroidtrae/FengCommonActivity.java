@@ -31,7 +31,7 @@ public class FengCommonActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("鋒兄常用");
+            getSupportActionBar().setTitle(R.string.screen_title_common);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -73,7 +73,7 @@ public class FengCommonActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception error) {
-                        runOnUiThread(() -> showError("載入失敗: " + error.getMessage()));
+                        runOnUiThread(() -> showError(getString(R.string.generic_load_error, error.getMessage())));
                     }
                 });
     }

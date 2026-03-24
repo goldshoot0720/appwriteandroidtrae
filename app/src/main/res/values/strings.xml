@@ -4,63 +4,86 @@
     <string name="feature_subscription">訂閱管理</string>
     <string name="feature_oil">石油監控</string>
     <string name="feature_bank">銀行統計</string>
-    <string name="feature_food">食物管理</string>
+    <string name="feature_food">鋒兄食物</string>
     <string name="feature_notes">鋒兄筆記</string>
     <string name="feature_common">鋒兄常用</string>
 
-    <string name="main_section_label">功能選單</string>
-    <string name="main_tile_subscription_desc">管理訂閱時間與提醒</string>
-    <string name="main_tile_oil_desc">查看油價與更新紀錄</string>
-    <string name="main_tile_bank_desc">整理銀行與卡片資訊</string>
-    <string name="main_tile_food_desc">追蹤食材與保存期限</string>
-    <string name="main_tile_notes_desc">快速查看筆記內容</string>
-    <string name="main_tile_common_desc">集中常用帳號與資料</string>
+    <string name="main_section_label">生活管理</string>
+    <string name="main_tile_subscription_desc">查看訂閱項目、帳號與扣款日期</string>
+    <string name="main_tile_oil_desc">追蹤最新油價與歷史變化</string>
+    <string name="main_tile_bank_desc">整理銀行資料與存提款資訊</string>
+    <string name="main_tile_food_desc">查看食物價格、數量與日期</string>
+    <string name="main_tile_notes_desc">快速查看鋒兄筆記內容</string>
+    <string name="main_tile_common_desc">直接列出鋒兄常用資料</string>
 
     <string name="menu_bank_stats">銀行統計</string>
     <string name="notification_channel_name">訂閱到期提醒</string>
     <string name="notification_channel_description">顯示最近到期的訂閱通知</string>
 
     <string name="ui_error_prefix">載入失敗: </string>
-    <string name="ui_close">知道了</string>
+    <string name="ui_close">關閉</string>
     <string name="ui_today_due">今天到期</string>
     <string name="ui_due_tomorrow">明天到期</string>
     <string name="ui_due_in_two_days">兩天後到期</string>
     <string name="ui_due_in_days">%1$d 天後到期</string>
 
     <string name="screen_subscription_eyebrow">Subscription</string>
-    <string name="screen_subscription_subtitle">訂閱名稱、帳號、費用與續訂日</string>
+    <string name="screen_subscription_subtitle">列出訂閱名稱、帳號、費用與日期</string>
     <string name="screen_bank_eyebrow">Banking</string>
-    <string name="screen_bank_subtitle">銀行、帳戶、卡片與金流整理</string>
+    <string name="screen_bank_subtitle">查看銀行資料、帳戶與金額摘要</string>
     <string name="screen_food_eyebrow">Food</string>
-    <string name="screen_food_subtitle">食材價格、數量、店家與到期日</string>
+    <string name="screen_food_subtitle">列出食物價格、數量、商店與日期</string>
     <string name="screen_notes_eyebrow">Notes</string>
-    <string name="screen_notes_subtitle">筆記標題、摘要與連結資訊</string>
+    <string name="screen_notes_subtitle">集中查看鋒兄筆記與連結</string>
     <string name="screen_common_eyebrow">Common</string>
-    <string name="screen_common_subtitle">分類查看常用資料與帳號資訊</string>
+    <string name="screen_common_subtitle">直接列出鋒兄常用資料</string>
 
-    <string name="subscription_alert_title">近期即將續訂</string>
-    <string name="subscription_price_label">費用</string>
+    <string name="subscription_alert_title">訂閱即將到期</string>
+    <string name="subscription_alert_item">%1$s - %2$s到期 (%3$s %4$s)\n  %5$s</string>
+    <string name="subscription_due_suffix">到期</string>
+    <string name="subscription_price_label">價格</string>
     <string name="subscription_account_label">帳號</string>
-    <string name="subscription_next_date_label">下次扣款</string>
-    <string name="subscription_notification_content">%1$s 續訂 %2$s %3$s</string>
+    <string name="subscription_next_date_label">日期</string>
+    <string name="subscription_created_date_label">建立日期</string>
+    <string name="subscription_notification_content">%1$s 扣款 %2$s %3$s</string>
+    <string name="screen_title_subscription">訂閱管理</string>
+    <string name="screen_title_bank">銀行統計</string>
+    <string name="screen_title_food">鋒兄食物</string>
+    <string name="screen_title_notes">鋒兄筆記</string>
+    <string name="screen_title_common">鋒兄常用</string>
+    <string name="screen_title_oil">石油監控</string>
 
     <string name="bank_unknown_name">未命名銀行</string>
     <string name="bank_account_label">帳戶</string>
-    <string name="bank_deposit_label">存入</string>
-    <string name="bank_withdraw_label">提出</string>
+    <string name="bank_deposit_label">存款</string>
+    <string name="bank_withdraw_label">提款</string>
     <string name="bank_transfer_label">轉帳</string>
     <string name="bank_card_label">卡片</string>
     <string name="bank_address_label">地址</string>
 
-    <string name="food_unknown_name">未命名項目</string>
+    <string name="food_unknown_name">未命名食物</string>
     <string name="food_amount_label">數量</string>
     <string name="food_price_label">價格</string>
-    <string name="food_shop_label">店家</string>
+    <string name="food_shop_label">商店</string>
+    <string name="food_date_label">日期</string>
+    <string name="food_created_date_label">建立日期</string>
     <string name="food_expiry_label">到期</string>
 
-    <string name="article_untitled">未命名筆記</string>
+    <string name="article_untitled">未命名文章</string>
     <string name="article_links_count">%1$d 個連結</string>
 
     <string name="common_uncategorized">未分類</string>
-    <string name="common_items_count">%1$d 項</string>
+    <string name="common_items_count">%1$d 筆</string>
+    <string name="generic_load_error">載入失敗: %1$s</string>
+    <string name="date_label_format">%1$s: %2$s</string>
+    <string name="value_label_format">%1$s: %2$s</string>
+    <string name="currency_value_format">%1$s: $%2$s</string>
+    <string name="subscription_title_format">%1$s - %2$s</string>
+    <string name="oil_fetch_error">石油價格載入失敗: %1$s</string>
+    <string name="oil_latest_price">最新油價 %.2f</string>
+    <string name="oil_latest_price_empty">最新油價 --</string>
+    <string name="oil_quote_date">報價日期: %1$s</string>
+    <string name="oil_quote_date_empty">報價日期: --</string>
+    <string name="oil_last_fetched">更新時間: %1$s</string>
+    <string name="oil_last_fetched_empty">更新時間: --</string>
 </resources>

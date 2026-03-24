@@ -34,7 +34,7 @@ public class FoodManagementActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("鋒兄食物");
+            getSupportActionBar().setTitle(R.string.screen_title_food);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -79,7 +79,7 @@ public class FoodManagementActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             textViewError.setVisibility(View.VISIBLE);
-                            textViewError.setText("載入失敗: " + error.getMessage());
+                            textViewError.setText(getString(R.string.generic_load_error, error.getMessage()));
                         });
                     }
                 });
@@ -106,23 +106,41 @@ public class FoodManagementActivity extends AppCompatActivity {
             TextView textDate = convertView.findViewById(R.id.textFoodDate);
 
             if (item != null) {
-                textName.setText(item.name != null && !item.name.isEmpty() ? item.name : "未命名");
-                textAmount.setText("數量: " + item.amount);
-                textPrice.setText("價格: $" + item.price);
-                
+                textName.setText(item.name != null && !item.name.isEmpty()
+                        ? item.name
+                        : getContext().getString(R.string.food_unknown_name));
+                textAmount.setText(getContext().getString(
+                        R.string.value_label_format,
+                        getContext().getString(R.string.food_amount_label),
+                        String.valueOf(item.amount)
+                ));
+                textPrice.setText(getContext().getString(
+                        R.string.currency_value_format,
+                        getContext().getString(R.string.food_price_label),
+                        String.valueOf(item.price)
+                ));
+
                 if (item.shop != null && !item.shop.isEmpty()) {
                     textShop.setVisibility(View.VISIBLE);
-                    textShop.setText("商店: " + item.shop);
+                    textShop.setText(getContext().getString(
+                            R.string.value_label_format,
+                            getContext().getString(R.string.food_shop_label),
+                            item.shop
+                    ));
                 } else {
                     textShop.setVisibility(View.GONE);
                 }
 
                 long visibleDateMillis = item.todateMillis > 0 ? item.todateMillis : item.createdAtMillis;
-                String visibleDateLabel = item.todateMillis > 0 ? "日期" : "建立日期";
+                int labelRes = item.todateMillis > 0 ? R.string.food_date_label : R.string.food_created_date_label;
 
                 if (visibleDateMillis > 0) {
                     textDate.setVisibility(View.VISIBLE);
-                    textDate.setText(visibleDateLabel + ": " + dateFormat.format(new Date(visibleDateMillis)));
+                    textDate.setText(getContext().getString(
+                            R.string.date_label_format,
+                            getContext().getString(labelRes),
+                            dateFormat.format(new Date(visibleDateMillis))
+                    ));
                 } else {
                     textDate.setVisibility(View.GONE);
                 }

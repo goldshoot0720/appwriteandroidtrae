@@ -46,7 +46,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("訂閱管理");
+            getSupportActionBar().setTitle(R.string.screen_title_subscription);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -92,7 +92,7 @@ public class SubscriptionActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             textViewError.setVisibility(View.VISIBLE);
-                            textViewError.setText("載入失敗: " + error.getMessage());
+                            textViewError.setText(getString(R.string.generic_load_error, error.getMessage()));
                         });
                     }
                 });
@@ -102,10 +102,10 @@ public class SubscriptionActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
-                    "訂閱到期提醒",
+                    getString(R.string.notification_channel_name),
                     NotificationManager.IMPORTANCE_DEFAULT
             );
-            channel.setDescription("顯示最近到期的訂閱通知");
+            channel.setDescription(getString(R.string.notification_channel_description));
             NotificationManager manager = getSystemService(NotificationManager.class);
             if (manager != null) {
                 manager.createNotificationChannel(channel);
@@ -129,7 +129,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         long now = System.currentTimeMillis();
         long threeDaysMillis = 3L * 24L * 60L * 60L * 1000L;
         StringBuilder alertMessage = new StringBuilder();
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
         for (AppwriteHelper.SubscriptionItem item : items) {
             if (item.nextDateMillis <= 0L || !item.continueFlag) {
@@ -139,31 +139,26 @@ public class SubscriptionActivity extends AppCompatActivity {
                 long daysLeft = TimeUnit.MILLISECONDS.toDays(item.nextDateMillis - now);
                 showExpiryNotification(item, daysLeft);
 
-                String daysText;
-                if (daysLeft <= 0) {
-                    daysText = "今天";
-                } else if (daysLeft == 1) {
-                    daysText = "明天";
-                } else if (daysLeft == 2) {
-                    daysText = "兩天後";
-                } else {
-                    daysText = daysLeft + " 天後";
+                String currencyText = item.currency != null && !item.currency.isEmpty() ? item.currency : "TWD";
+                if (alertMessage.length() > 0) {
+                    alertMessage.append("\n\n");
                 }
-                String priceText = item.price >= 0 ? String.valueOf(item.price) : "?";
-                String currencyText = (item.currency != null && !item.currency.isEmpty()) ? item.currency : "TWD";
-                alertMessage.append(item.name)
-                        .append(" - ").append(daysText).append("到期")
-                        .append(" (").append(priceText).append(" ").append(currencyText).append(")")
-                        .append("\n  ").append(fmt.format(new Date(item.nextDateMillis)))
-                        .append("\n\n");
+                alertMessage.append(getString(
+                        R.string.subscription_alert_item,
+                        item.name,
+                        getDueText(daysLeft),
+                        item.price >= 0 ? String.valueOf(item.price) : "?",
+                        currencyText,
+                        format.format(new Date(item.nextDateMillis))
+                ));
             }
         }
 
         if (alertMessage.length() > 0) {
             new AlertDialog.Builder(this)
-                    .setTitle("訂閱即將到期")
-                    .setMessage(alertMessage.toString().trim())
-                    .setPositiveButton("關閉", null)
+                    .setTitle(R.string.subscription_alert_title)
+                    .setMessage(alertMessage.toString())
+                    .setPositiveButton(R.string.ui_close, null)
                     .show();
         }
     }
@@ -175,23 +170,12 @@ public class SubscriptionActivity extends AppCompatActivity {
             return;
         }
 
-        String daysText;
-        if (daysLeft <= 0) {
-            daysText = "今天";
-        } else if (daysLeft == 1) {
-            daysText = "明天";
-        } else if (daysLeft == 2) {
-            daysText = "兩天後";
-        } else {
-            daysText = daysLeft + " 天後";
-        }
-
-        String title = item.name + " - " + daysText + "到期";
+        String title = getString(R.string.subscription_title_format, item.name, getDueText(daysLeft));
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String dateText = format.format(new Date(item.nextDateMillis));
         String priceText = item.price >= 0 ? String.valueOf(item.price) : "?";
-        String currencyText = (item.currency != null && !item.currency.isEmpty()) ? item.currency : "TWD";
-        String content = dateText + " 扣款 " + priceText + " " + currencyText;
+        String currencyText = item.currency != null && !item.currency.isEmpty() ? item.currency : "TWD";
+        String content = getString(R.string.subscription_notification_content, dateText, priceText, currencyText);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -200,8 +184,20 @@ public class SubscriptionActivity extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
 
-        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
-        manager.notify(item.id.hashCode(), builder.build());
+        NotificationManagerCompat.from(this).notify(item.id.hashCode(), builder.build());
+    }
+
+    private String getDueText(long daysLeft) {
+        if (daysLeft <= 0) {
+            return getString(R.string.ui_today_due);
+        }
+        if (daysLeft == 1) {
+            return getString(R.string.ui_due_tomorrow);
+        }
+        if (daysLeft == 2) {
+            return getString(R.string.ui_due_in_two_days);
+        }
+        return getString(R.string.ui_due_in_days, daysLeft);
     }
 
     private static class SubscriptionAdapter extends ArrayAdapter<AppwriteHelper.SubscriptionItem> {
@@ -238,28 +234,44 @@ public class SubscriptionActivity extends AppCompatActivity {
 
                 if (item.price >= 0) {
                     textPrice.setVisibility(View.VISIBLE);
-                    textPrice.setText("價格: " + item.price);
+                    textPrice.setText(getContext().getString(
+                            R.string.value_label_format,
+                            getContext().getString(R.string.subscription_price_label),
+                            String.valueOf(item.price)
+                    ));
                 } else {
                     textPrice.setVisibility(View.GONE);
                 }
 
                 if (item.account != null && !item.account.isEmpty()) {
                     textAccount.setVisibility(View.VISIBLE);
-                    textAccount.setText("帳號: " + item.account);
+                    textAccount.setText(getContext().getString(
+                            R.string.value_label_format,
+                            getContext().getString(R.string.subscription_account_label),
+                            item.account
+                    ));
                 } else {
                     textAccount.setVisibility(View.GONE);
                 }
 
                 if (item.nextDateMillis > 0L) {
                     textNextDate.setVisibility(View.VISIBLE);
-                    textNextDate.setText("日期: " + dateFormat.format(new Date(item.nextDateMillis)));
+                    textNextDate.setText(getContext().getString(
+                            R.string.date_label_format,
+                            getContext().getString(R.string.subscription_next_date_label),
+                            dateFormat.format(new Date(item.nextDateMillis))
+                    ));
                 } else {
                     textNextDate.setVisibility(View.GONE);
                 }
 
                 if (item.createdAtMillis > 0L) {
                     textCreatedDate.setVisibility(View.VISIBLE);
-                    textCreatedDate.setText("建立日期: " + dateFormat.format(new Date(item.createdAtMillis)));
+                    textCreatedDate.setText(getContext().getString(
+                            R.string.date_label_format,
+                            getContext().getString(R.string.subscription_created_date_label),
+                            dateFormat.format(new Date(item.createdAtMillis))
+                    ));
                 } else {
                     textCreatedDate.setVisibility(View.GONE);
                 }

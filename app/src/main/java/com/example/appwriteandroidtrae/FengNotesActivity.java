@@ -34,7 +34,7 @@ public class FengNotesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("鋒兄筆記");
+            getSupportActionBar().setTitle(R.string.screen_title_notes);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -79,7 +79,7 @@ public class FengNotesActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             textViewError.setVisibility(View.VISIBLE);
-                            textViewError.setText("載入失敗: " + error.getMessage());
+                            textViewError.setText(getString(R.string.generic_load_error, error.getMessage()));
                         });
                     }
                 });
@@ -105,14 +105,16 @@ public class FengNotesActivity extends AppCompatActivity {
             TextView textUrls = convertView.findViewById(R.id.textArticleUrls);
 
             if (item != null) {
-                textTitle.setText(item.title != null && !item.title.isEmpty() ? item.title : "無標題");
-                
+                textTitle.setText(item.title != null && !item.title.isEmpty()
+                        ? item.title
+                        : getContext().getString(R.string.article_untitled));
+
                 String content = item.content != null ? item.content : "";
                 if (content.length() > 100) {
                     content = content.substring(0, 100) + "...";
                 }
                 textContent.setText(content);
-                
+
                 if (item.newDateMillis > 0) {
                     textDate.setText(dateFormat.format(new Date(item.newDateMillis)));
                 } else if (item.createdAtMillis > 0) {
@@ -121,15 +123,14 @@ public class FengNotesActivity extends AppCompatActivity {
                     textDate.setText("");
                 }
 
-                // 顯示 URL 數量
                 int urlCount = 0;
                 if (item.url1 != null && !item.url1.isEmpty()) urlCount++;
                 if (item.url2 != null && !item.url2.isEmpty()) urlCount++;
                 if (item.url3 != null && !item.url3.isEmpty()) urlCount++;
-                
+
                 if (urlCount > 0) {
                     textUrls.setVisibility(View.VISIBLE);
-                    textUrls.setText("🔗 " + urlCount + " 個連結");
+                    textUrls.setText(getContext().getString(R.string.article_links_count, urlCount));
                 } else {
                     textUrls.setVisibility(View.GONE);
                 }

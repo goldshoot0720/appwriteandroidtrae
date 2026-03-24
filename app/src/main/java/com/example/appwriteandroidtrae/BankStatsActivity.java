@@ -33,7 +33,7 @@ public class BankStatsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle("銀行統計");
+            getSupportActionBar().setTitle(R.string.screen_title_bank);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
@@ -78,7 +78,7 @@ public class BankStatsActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             textViewError.setVisibility(View.VISIBLE);
-                            textViewError.setText("載入失敗: " + error.getMessage());
+                            textViewError.setText(getString(R.string.generic_load_error, error.getMessage()));
                         });
                     }
                 });
@@ -114,16 +114,40 @@ public class BankStatsActivity extends AppCompatActivity {
             TextView textAddress = convertView.findViewById(R.id.textAddress);
 
             if (item != null) {
-                textName.setText(item.name != null ? item.name : "Unknown Bank");
-                textAccount.setText("Account: " + (item.account != null ? item.account : ""));
-                textDeposit.setText("存款: " + item.deposit);
-                textWithdrawals.setText("提款: " + item.withdrawals);
-                textTransfer.setText("轉帳: " + item.transfer);
-                textCard.setText("卡號: " + (item.card != null ? item.card : ""));
-                
+                textName.setText(item.name != null ? item.name : getContext().getString(R.string.bank_unknown_name));
+                textAccount.setText(getContext().getString(
+                        R.string.value_label_format,
+                        getContext().getString(R.string.bank_account_label),
+                        item.account != null ? item.account : ""
+                ));
+                textDeposit.setText(getContext().getString(
+                        R.string.value_label_format,
+                        getContext().getString(R.string.bank_deposit_label),
+                        String.valueOf(item.deposit)
+                ));
+                textWithdrawals.setText(getContext().getString(
+                        R.string.value_label_format,
+                        getContext().getString(R.string.bank_withdraw_label),
+                        String.valueOf(item.withdrawals)
+                ));
+                textTransfer.setText(getContext().getString(
+                        R.string.value_label_format,
+                        getContext().getString(R.string.bank_transfer_label),
+                        String.valueOf(item.transfer)
+                ));
+                textCard.setText(getContext().getString(
+                        R.string.value_label_format,
+                        getContext().getString(R.string.bank_card_label),
+                        item.card != null ? item.card : ""
+                ));
+
                 if (item.address != null && !item.address.isEmpty()) {
                     textAddress.setVisibility(View.VISIBLE);
-                    textAddress.setText("地址: " + item.address);
+                    textAddress.setText(getContext().getString(
+                            R.string.value_label_format,
+                            getContext().getString(R.string.bank_address_label),
+                            item.address
+                    ));
                 } else {
                     textAddress.setVisibility(View.GONE);
                 }
