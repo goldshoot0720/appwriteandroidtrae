@@ -174,8 +174,18 @@ public class FoodManagementActivity extends AppCompatActivity {
                     textShop.setVisibility(View.GONE);
                 }
 
-                long visibleDateMillis = item.todateMillis > 0 ? item.todateMillis : item.createdAtMillis;
-                int labelRes = item.todateMillis > 0 ? R.string.food_date_label : R.string.food_created_date_label;
+                long visibleDateMillis;
+                int labelRes;
+                if (item.todateMillis > 0) {
+                    visibleDateMillis = item.todateMillis;
+                    labelRes = R.string.food_date_label;
+                } else if (item.createdAtMillis > 0) {
+                    visibleDateMillis = item.createdAtMillis;
+                    labelRes = R.string.food_created_date_label;
+                } else {
+                    visibleDateMillis = item.updatedAtMillis;
+                    labelRes = R.string.food_updated_date_label;
+                }
 
                 if (visibleDateMillis > 0) {
                     textDate.setVisibility(View.VISIBLE);

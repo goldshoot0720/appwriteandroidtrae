@@ -50,6 +50,7 @@
     <string name="subscription_account_label">帳號</string>
     <string name="subscription_next_date_label">日期</string>
     <string name="subscription_created_date_label">建立日期</string>
+    <string name="subscription_updated_date_label">更新日期</string>
     <string name="subscription_notification_content">%1$s 扣款 %2$s %3$s</string>
     <string name="screen_title_subscription">訂閱管理</string>
     <string name="screen_title_bank">銀行統計</string>
@@ -73,6 +74,7 @@
     <string name="food_shop_label">商店</string>
     <string name="food_date_label">日期</string>
     <string name="food_created_date_label">建立日期</string>
+    <string name="food_updated_date_label">更新日期</string>
     <string name="food_expiry_label">到期</string>
 
     <string name="article_untitled">未命名文章</string>

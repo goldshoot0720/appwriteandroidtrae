@@ -311,12 +311,17 @@ public class SubscriptionActivity extends AppCompatActivity {
                     textNextDate.setVisibility(View.GONE);
                 }
 
-                if (item.createdAtMillis > 0L) {
+                long fallbackDateMillis = item.createdAtMillis > 0L ? item.createdAtMillis : item.updatedAtMillis;
+                int fallbackLabelRes = item.createdAtMillis > 0L
+                        ? R.string.subscription_created_date_label
+                        : R.string.subscription_updated_date_label;
+
+                if (fallbackDateMillis > 0L) {
                     textCreatedDate.setVisibility(View.VISIBLE);
                     textCreatedDate.setText(getContext().getString(
                             R.string.date_label_format,
-                            getContext().getString(R.string.subscription_created_date_label),
-                            dateFormat.format(new Date(item.createdAtMillis))
+                            getContext().getString(fallbackLabelRes),
+                            dateFormat.format(new Date(fallbackDateMillis))
                     ));
                 } else {
                     textCreatedDate.setVisibility(View.GONE);

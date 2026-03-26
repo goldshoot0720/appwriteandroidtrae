@@ -13,10 +13,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AppwriteHelper {
 
@@ -567,14 +570,9 @@ public class AppwriteHelper {
     }
 
     private long extractDateField(JSONObject document, String fieldName) {
-        String value = document.optString(fieldName, null);
-        if (value != null && !value.isEmpty() && !"null".equalsIgnoreCase(value)) {
-            Long millis = parseDateToMillis(value);
-            if (millis != null) {
-                return millis;
-            }
-        }
-        return -1L;
+        Object rawValue = document.opt(fieldName);
+        Long millis = parseDateValue(rawValue);
+        return millis != null ? millis : -1L;
     }
 
     private String extractName(JSONObject document, String fallback) {
@@ -586,14 +584,30 @@ public class AppwriteHelper {
     }
 
     private long extractNextDate(JSONObject document) {
-        String value = document.optString("nextdate", null);
-        if (value != null && !value.isEmpty() && !"null".equalsIgnoreCase(value)) {
-            Long millis = parseDateToMillis(value);
-            if (millis != null) {
+        String[] candidates = new String[]{"nextdate", "nextDate", "date", "renewDate"};
+        for (String fieldName : candidates) {
+            long millis = extractDateField(document, fieldName);
+            if (millis > 0L) {
                 return millis;
             }
         }
         return -1L;
+    }
+
+    private Long parseDateValue(Object rawValue) {
+        if (rawValue == null || JSONObject.NULL.equals(rawValue)) {
+            return null;
+        }
+        if (rawValue instanceof Number) {
+            long value = ((Number) rawValue).longValue();
+            return value > 1_000_000_000_000L ? value : value * 1000L;
+        }
+
+        String value = String.valueOf(rawValue).trim();
+        if (value.isEmpty() || "null".equalsIgnoreCase(value)) {
+            return null;
+        }
+        return parseDateToMillis(value);
     }
 
     private Long parseDateToMillis(String value) {
@@ -603,9 +617,31 @@ public class AppwriteHelper {
         } catch (DateTimeParseException ignored) {
         }
         try {
+            long epoch = Long.parseLong(value);
+            return epoch > 1_000_000_000_000L ? epoch : epoch * 1000L;
+        } catch (NumberFormatException ignored) {
+        }
+        try {
             LocalDate date = LocalDate.parse(value);
             return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
         } catch (DateTimeParseException ignored) {
+        }
+        DateTimeFormatter[] dateTimeFormatters = new DateTimeFormatter[]{
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault()),
+                DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss", Locale.getDefault()),
+                DateTimeFormatter.ofPattern("yyyy/MM/dd", Locale.getDefault()),
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault())
+        };
+        for (DateTimeFormatter formatter : dateTimeFormatters) {
+            try {
+                if (formatter.toString().contains("H")) {
+                    LocalDateTime dateTime = LocalDateTime.parse(value, formatter);
+                    return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+                }
+                LocalDate date = LocalDate.parse(value, formatter);
+                return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            } catch (DateTimeParseException ignored) {
+            }
         }
         return null;
     }

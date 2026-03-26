@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +45,18 @@ public class USDebtRepository {
 
     public synchronized void savePoint(USDebtPoint point) {
         List<USDebtPoint> history = getHistory();
-        history.add(point);
+        LocalDate targetDate = toLocalDate(point.fetchedAtMillis);
+        boolean replaced = false;
+        for (int i = 0; i < history.size(); i++) {
+            if (toLocalDate(history.get(i).fetchedAtMillis).equals(targetDate)) {
+                history.set(i, point);
+                replaced = true;
+                break;
+            }
+        }
+        if (!replaced) {
+            history.add(point);
+        }
         history.sort(Comparator.comparingLong(item -> item.fetchedAtMillis));
         while (history.size() > MAX_HISTORY_SIZE) {
             history.remove(0);
@@ -59,5 +73,9 @@ public class USDebtRepository {
             }
         }
         preferences.edit().putString(KEY_HISTORY, array.toString()).apply();
+    }
+
+    private LocalDate toLocalDate(long millis) {
+        return Instant.ofEpochMilli(millis).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }
