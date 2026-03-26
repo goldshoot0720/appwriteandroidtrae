@@ -1,6 +1,8 @@
 package com.example.appwriteandroidtrae;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,8 +27,10 @@ public class FoodManagementActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ListView listView;
     private TextView textViewError;
+    private TextInputEditText editTextSearchFoods;
     private FoodAdapter adapter;
-    private final List<AppwriteHelper.FoodItem> foods = new ArrayList<>();
+    private final List<AppwriteHelper.FoodItem> allFoods = new ArrayList<>();
+    private final List<AppwriteHelper.FoodItem> filteredFoods = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +49,25 @@ public class FoodManagementActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.listViewFoods);
         textViewError = findViewById(R.id.textViewError);
+        editTextSearchFoods = findViewById(R.id.editTextSearchFoods);
 
-        adapter = new FoodAdapter(this, foods);
+        adapter = new FoodAdapter(this, filteredFoods);
         listView.setAdapter(adapter);
+
+        editTextSearchFoods.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterFoods(s != null ? s.toString() : "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         loadFoods();
     }
@@ -68,9 +90,11 @@ public class FoodManagementActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             listView.setVisibility(View.VISIBLE);
-                            foods.clear();
-                            foods.addAll(result);
-                            adapter.notifyDataSetChanged();
+                            allFoods.clear();
+                            allFoods.addAll(result);
+                            filterFoods(editTextSearchFoods.getText() != null
+                                    ? editTextSearchFoods.getText().toString()
+                                    : "");
                         });
                     }
 
@@ -83,6 +107,25 @@ public class FoodManagementActivity extends AppCompatActivity {
                         });
                     }
                 });
+    }
+
+    private void filterFoods(String query) {
+        String normalizedQuery = query.trim().toLowerCase(Locale.getDefault());
+        filteredFoods.clear();
+
+        if (normalizedQuery.isEmpty()) {
+            filteredFoods.addAll(allFoods);
+        } else {
+            for (AppwriteHelper.FoodItem item : allFoods) {
+                String name = item.name != null ? item.name.toLowerCase(Locale.getDefault()) : "";
+                String shop = item.shop != null ? item.shop.toLowerCase(Locale.getDefault()) : "";
+                if (name.contains(normalizedQuery) || shop.contains(normalizedQuery)) {
+                    filteredFoods.add(item);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     private static class FoodAdapter extends ArrayAdapter<AppwriteHelper.FoodItem> {

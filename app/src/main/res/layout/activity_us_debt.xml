@@ -72,6 +72,12 @@
                 android:textColor="@android:color/holo_red_dark"
                 android:visibility="gone" />
 
+            <WebView
+                android:id="@+id/webViewDebt"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:visibility="invisible" />
+
             <com.example.appwriteandroidtrae.USDebtChartView
                 android:id="@+id/usDebtChart"
                 android:layout_width="match_parent"

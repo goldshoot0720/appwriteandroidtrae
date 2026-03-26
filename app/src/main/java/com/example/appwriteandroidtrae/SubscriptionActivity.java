@@ -7,6 +7,8 @@ import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,6 +21,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,8 +39,10 @@ public class SubscriptionActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ListView listView;
     private TextView textViewError;
+    private TextInputEditText editTextSearchSubscriptions;
     private ArrayAdapter<AppwriteHelper.SubscriptionItem> adapter;
-    private final List<AppwriteHelper.SubscriptionItem> subscriptionItems = new ArrayList<>();
+    private final List<AppwriteHelper.SubscriptionItem> allSubscriptionItems = new ArrayList<>();
+    private final List<AppwriteHelper.SubscriptionItem> filteredSubscriptionItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +61,25 @@ public class SubscriptionActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.listViewSubscriptions);
         textViewError = findViewById(R.id.textViewError);
+        editTextSearchSubscriptions = findViewById(R.id.editTextSearchSubscriptions);
 
-        adapter = new SubscriptionAdapter(this, subscriptionItems);
+        adapter = new SubscriptionAdapter(this, filteredSubscriptionItems);
         listView.setAdapter(adapter);
+
+        editTextSearchSubscriptions.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterSubscriptions(s != null ? s.toString() : "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         createNotificationChannel();
         ensureNotificationPermission();
@@ -80,9 +102,11 @@ public class SubscriptionActivity extends AppCompatActivity {
                     public void onSuccess(List<AppwriteHelper.SubscriptionItem> result) {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
-                            subscriptionItems.clear();
-                            subscriptionItems.addAll(result);
-                            adapter.notifyDataSetChanged();
+                            allSubscriptionItems.clear();
+                            allSubscriptionItems.addAll(result);
+                            filterSubscriptions(editTextSearchSubscriptions.getText() != null
+                                    ? editTextSearchSubscriptions.getText().toString()
+                                    : "");
                             checkExpiringSubscriptions(result);
                         });
                     }
@@ -96,6 +120,28 @@ public class SubscriptionActivity extends AppCompatActivity {
                         });
                     }
                 });
+    }
+
+    private void filterSubscriptions(String query) {
+        String normalizedQuery = query.trim().toLowerCase(Locale.getDefault());
+        filteredSubscriptionItems.clear();
+
+        if (normalizedQuery.isEmpty()) {
+            filteredSubscriptionItems.addAll(allSubscriptionItems);
+        } else {
+            for (AppwriteHelper.SubscriptionItem item : allSubscriptionItems) {
+                String title = item.name != null ? item.name.toLowerCase(Locale.getDefault()) : "";
+                String note = item.note != null ? item.note.toLowerCase(Locale.getDefault()) : "";
+                String site = item.site != null ? item.site.toLowerCase(Locale.getDefault()) : "";
+                if (title.contains(normalizedQuery)
+                        || note.contains(normalizedQuery)
+                        || site.contains(normalizedQuery)) {
+                    filteredSubscriptionItems.add(item);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     private void createNotificationChannel() {

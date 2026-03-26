@@ -1,6 +1,8 @@
 package com.example.appwriteandroidtrae;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,8 +27,10 @@ public class FengNotesActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private ListView listView;
     private TextView textViewError;
+    private TextInputEditText editTextSearchNotes;
     private ArticleAdapter adapter;
-    private final List<AppwriteHelper.ArticleItem> articles = new ArrayList<>();
+    private final List<AppwriteHelper.ArticleItem> allArticles = new ArrayList<>();
+    private final List<AppwriteHelper.ArticleItem> filteredArticles = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +49,25 @@ public class FengNotesActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.listViewArticles);
         textViewError = findViewById(R.id.textViewError);
+        editTextSearchNotes = findViewById(R.id.editTextSearchNotes);
 
-        adapter = new ArticleAdapter(this, articles);
+        adapter = new ArticleAdapter(this, filteredArticles);
         listView.setAdapter(adapter);
+
+        editTextSearchNotes.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterArticles(s != null ? s.toString() : "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         loadArticles();
     }
@@ -68,9 +90,11 @@ public class FengNotesActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             listView.setVisibility(View.VISIBLE);
-                            articles.clear();
-                            articles.addAll(result);
-                            adapter.notifyDataSetChanged();
+                            allArticles.clear();
+                            allArticles.addAll(result);
+                            filterArticles(editTextSearchNotes.getText() != null
+                                    ? editTextSearchNotes.getText().toString()
+                                    : "");
                         });
                     }
 
@@ -83,6 +107,25 @@ public class FengNotesActivity extends AppCompatActivity {
                         });
                     }
                 });
+    }
+
+    private void filterArticles(String query) {
+        String normalizedQuery = query.trim().toLowerCase(Locale.getDefault());
+        filteredArticles.clear();
+
+        if (normalizedQuery.isEmpty()) {
+            filteredArticles.addAll(allArticles);
+        } else {
+            for (AppwriteHelper.ArticleItem item : allArticles) {
+                String title = item.title != null ? item.title.toLowerCase(Locale.getDefault()) : "";
+                String content = item.content != null ? item.content.toLowerCase(Locale.getDefault()) : "";
+                if (title.contains(normalizedQuery) || content.contains(normalizedQuery)) {
+                    filteredArticles.add(item);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
     }
 
     private static class ArticleAdapter extends ArrayAdapter<AppwriteHelper.ArticleItem> {

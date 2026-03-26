@@ -1,15 +1,20 @@
 package com.example.appwriteandroidtrae;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.webkit.ValueCallback;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -26,9 +31,11 @@ public class USDebtActivity extends AppCompatActivity {
 
     private static final String SOURCE_URL = "https://www.usdebtclock.org/";
     private static final Pattern MONEY_PATTERN = Pattern.compile("\\$[0-9,]+");
+    private static final long LOAD_TIMEOUT_MS = 15000L;
 
     private final SimpleDateFormat fetchTimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private ProgressBar progressBar;
     private TextView textLatestDebt;
@@ -37,6 +44,15 @@ public class USDebtActivity extends AppCompatActivity {
     private TextView textDebtError;
     private USDebtChartView chartView;
     private WebView debtWebView;
+    private boolean loadCompleted;
+    private final Runnable timeoutRunnable = () -> {
+        if (!loadCompleted) {
+            showError("讀取 usdebtclock.org 超時");
+            if (debtWebView != null) {
+                debtWebView.stopLoading();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +74,7 @@ public class USDebtActivity extends AppCompatActivity {
         textLastFetched = findViewById(R.id.textDebtLastFetched);
         textDebtError = findViewById(R.id.textDebtError);
         chartView = findViewById(R.id.usDebtChart);
+        debtWebView = findViewById(R.id.webViewDebt);
 
         setupWebView();
 
@@ -69,17 +86,34 @@ public class USDebtActivity extends AppCompatActivity {
 
     @SuppressLint("SetJavaScriptEnabled")
     private void setupWebView() {
-        debtWebView = new WebView(this);
         WebSettings settings = debtWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+        settings.setLoadsImagesAutomatically(false);
+        settings.setBlockNetworkImage(true);
         settings.setUserAgentString(
                 "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0 Mobile Safari/537.36"
         );
         debtWebView.setWebViewClient(new WebViewClient() {
             @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                loadCompleted = false;
+            }
+
+            @Override
             public void onPageFinished(WebView view, String url) {
                 view.postDelayed(() -> readDebtValue(view), 1200);
+            }
+
+            @Override
+            public void onReceivedError(
+                    @NonNull WebView view,
+                    @NonNull WebResourceRequest request,
+                    @NonNull WebResourceError error
+            ) {
+                if (request.isForMainFrame()) {
+                    showError(String.valueOf(error.getDescription()));
+                }
             }
         });
     }
@@ -91,8 +125,11 @@ public class USDebtActivity extends AppCompatActivity {
     }
 
     private void refreshDebt() {
+        loadCompleted = false;
         progressBar.setVisibility(View.VISIBLE);
         textDebtError.setVisibility(View.GONE);
+        handler.removeCallbacks(timeoutRunnable);
+        handler.postDelayed(timeoutRunnable, LOAD_TIMEOUT_MS);
         debtWebView.stopLoading();
         debtWebView.loadUrl(SOURCE_URL);
     }
@@ -105,12 +142,12 @@ public class USDebtActivity extends AppCompatActivity {
                 + "return first || '';"
                 + "})();";
 
-        view.evaluateJavascript(script, (ValueCallback<String>) value -> {
+        view.evaluateJavascript(script, value -> {
             try {
                 String raw = normalizeJavascriptResult(value);
                 Matcher matcher = MONEY_PATTERN.matcher(raw);
                 if (!matcher.find()) {
-                    throw new Exception("Unable to locate U.S. National Debt on usdebtclock.org.");
+                    throw new Exception("找不到 U.S. National Debt 數值");
                 }
 
                 long debtValue = Long.parseLong(matcher.group().replace("$", "").replace(",", ""));
@@ -118,12 +155,11 @@ public class USDebtActivity extends AppCompatActivity {
                 USDebtRepository repository = new USDebtRepository(getApplicationContext());
                 repository.savePoint(point);
                 renderHistory(repository.getHistory());
+                loadCompleted = true;
+                handler.removeCallbacks(timeoutRunnable);
                 progressBar.setVisibility(View.GONE);
             } catch (Exception error) {
-                progressBar.setVisibility(View.GONE);
-                renderHistory(new USDebtRepository(getApplicationContext()).getHistory());
-                textDebtError.setVisibility(View.VISIBLE);
-                textDebtError.setText(getString(R.string.us_debt_fetch_error, error.getMessage()));
+                showError(error.getMessage());
             }
         });
     }
@@ -136,7 +172,19 @@ public class USDebtActivity extends AppCompatActivity {
         if (normalized.startsWith("\"") && normalized.endsWith("\"") && normalized.length() >= 2) {
             normalized = normalized.substring(1, normalized.length() - 1);
         }
-        return normalized.replace("\\n", " ").replace("\\u003C", "<").replace("\\\"", "\"").trim();
+        return normalized.replace("\\n", " ")
+                .replace("\\u003C", "<")
+                .replace("\\\"", "\"")
+                .trim();
+    }
+
+    private void showError(String message) {
+        loadCompleted = true;
+        handler.removeCallbacks(timeoutRunnable);
+        progressBar.setVisibility(View.GONE);
+        renderHistory(new USDebtRepository(getApplicationContext()).getHistory());
+        textDebtError.setVisibility(View.VISIBLE);
+        textDebtError.setText(getString(R.string.us_debt_fetch_error, message));
     }
 
     private void renderHistory(List<USDebtPoint> history) {
@@ -166,6 +214,7 @@ public class USDebtActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        handler.removeCallbacks(timeoutRunnable);
         if (debtWebView != null) {
             debtWebView.stopLoading();
             debtWebView.destroy();

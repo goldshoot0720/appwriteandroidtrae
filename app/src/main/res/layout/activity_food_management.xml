@@ -55,6 +55,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textEyebrow" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/inputLayoutSearchFoods"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="20dp"
+        app:boxBackgroundColor="@color/surface_high"
+        app:boxCornerRadiusBottomEnd="18dp"
+        app:boxCornerRadiusBottomStart="18dp"
+        app:boxCornerRadiusTopEnd="18dp"
+        app:boxCornerRadiusTopStart="18dp"
+        app:boxStrokeColor="@color/surface_outline"
+        app:hintEnabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextSearchFoods"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/food_search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:textColor="@color/slate_950"
+            android:textColorHint="@color/slate_500" />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -63,7 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader" />
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutSearchFoods" />
 
     <ListView
         android:id="@+id/listViewFoods"
@@ -79,7 +112,7 @@
         app:layout_constraintBottom_toTopOf="@id/textViewError"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader" />
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutSearchFoods" />
 
     <TextView
         android:id="@+id/textViewError"
