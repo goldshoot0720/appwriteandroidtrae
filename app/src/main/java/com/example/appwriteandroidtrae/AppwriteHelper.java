@@ -14,7 +14,9 @@ import java.net.URL;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -617,6 +619,14 @@ public class AppwriteHelper {
         } catch (DateTimeParseException ignored) {
         }
         try {
+            return OffsetDateTime.parse(value).toInstant().toEpochMilli();
+        } catch (DateTimeParseException ignored) {
+        }
+        try {
+            return ZonedDateTime.parse(value).toInstant().toEpochMilli();
+        } catch (DateTimeParseException ignored) {
+        }
+        try {
             long epoch = Long.parseLong(value);
             return epoch > 1_000_000_000_000L ? epoch : epoch * 1000L;
         } catch (NumberFormatException ignored) {
@@ -629,15 +639,22 @@ public class AppwriteHelper {
         DateTimeFormatter[] dateTimeFormatters = new DateTimeFormatter[]{
                 DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.getDefault()),
                 DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss", Locale.getDefault()),
-                DateTimeFormatter.ofPattern("yyyy/MM/dd", Locale.getDefault()),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault())
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.getDefault()),
+                DateTimeFormatter.ISO_LOCAL_DATE_TIME
         };
         for (DateTimeFormatter formatter : dateTimeFormatters) {
             try {
-                if (formatter.toString().contains("H")) {
-                    LocalDateTime dateTime = LocalDateTime.parse(value, formatter);
-                    return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-                }
+                LocalDateTime dateTime = LocalDateTime.parse(value, formatter);
+                return dateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+            } catch (DateTimeParseException ignored) {
+            }
+        }
+        DateTimeFormatter[] dateFormatters = new DateTimeFormatter[]{
+                DateTimeFormatter.ofPattern("yyyy/MM/dd", Locale.getDefault()),
+                DateTimeFormatter.ISO_LOCAL_DATE
+        };
+        for (DateTimeFormatter formatter : dateFormatters) {
+            try {
                 LocalDate date = LocalDate.parse(value, formatter);
                 return date.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
             } catch (DateTimeParseException ignored) {
