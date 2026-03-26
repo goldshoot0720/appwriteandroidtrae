@@ -4,6 +4,7 @@
     <string name="feature_subscription">訂閱管理</string>
     <string name="feature_oil">石油監控</string>
     <string name="feature_bank">銀行統計</string>
+    <string name="feature_us_debt">US Debt</string>
     <string name="feature_food">鋒兄食物</string>
     <string name="feature_notes">鋒兄筆記</string>
     <string name="feature_common">鋒兄常用</string>
@@ -12,6 +13,7 @@
     <string name="main_tile_subscription_desc">查看訂閱項目、帳號與扣款日期</string>
     <string name="main_tile_oil_desc">追蹤最新油價與歷史變化</string>
     <string name="main_tile_bank_desc">整理銀行資料與存提款資訊</string>
+    <string name="main_tile_us_debt_desc">抓取 U.S. National Debt 並畫出歷史走勢</string>
     <string name="main_tile_food_desc">查看食物價格、數量與日期</string>
     <string name="main_tile_notes_desc">快速查看鋒兄筆記內容</string>
     <string name="main_tile_common_desc">直接列出鋒兄常用資料</string>
@@ -52,6 +54,7 @@
     <string name="screen_title_notes">鋒兄筆記</string>
     <string name="screen_title_common">鋒兄常用</string>
     <string name="screen_title_oil">石油監控</string>
+    <string name="screen_title_us_debt">US Debt</string>
 
     <string name="bank_unknown_name">未命名銀行</string>
     <string name="bank_account_label">帳戶</string>
@@ -86,4 +89,11 @@
     <string name="oil_quote_date_empty">報價日期: --</string>
     <string name="oil_last_fetched">更新時間: %1$s</string>
     <string name="oil_last_fetched_empty">更新時間: --</string>
+    <string name="us_debt_source">資料來源: usdebtclock.org 的 U.S. National Debt（即時頁面）</string>
+    <string name="us_debt_latest_value">US National Debt: %1$s</string>
+    <string name="us_debt_latest_empty">US National Debt: --</string>
+    <string name="us_debt_last_fetched">更新時間: %1$s</string>
+    <string name="us_debt_last_fetched_empty">更新時間: --</string>
+    <string name="us_debt_refresh">重新抓取</string>
+    <string name="us_debt_fetch_error">US Debt 載入失敗: %1$s</string>
 </resources>
