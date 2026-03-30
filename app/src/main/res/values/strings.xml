@@ -1,28 +1,30 @@
-<resources>
-    <string name="app_name">appwriteandroidtrae</string>
+﻿<resources>
+    <string name="app_name">Appwrite Android Trae</string>
 
-    <string name="feature_subscription">訂閱管理</string>
-    <string name="feature_oil">石油監控</string>
+    <string name="feature_subscription">訂閱到期提醒</string>
+    <string name="feature_oil">油價監控</string>
     <string name="feature_bank">銀行統計</string>
     <string name="feature_us_debt">US Debt</string>
-    <string name="feature_food">鋒兄食物</string>
-    <string name="feature_notes">鋒兄筆記</string>
-    <string name="feature_common">鋒兄常用</string>
+    <string name="feature_food">食物管理</string>
+    <string name="feature_notes">常用筆記</string>
+    <string name="feature_common">常用資料</string>
+    <string name="feature_lottery_reason">最瞎結婚理由</string>
 
-    <string name="main_section_label">生活管理</string>
-    <string name="main_tile_subscription_desc">查看訂閱項目、帳號與扣款日期</string>
-    <string name="main_tile_oil_desc">追蹤最新油價與歷史變化</string>
-    <string name="main_tile_bank_desc">整理銀行資料與存提款資訊</string>
-    <string name="main_tile_us_debt_desc">抓取 U.S. National Debt 並畫出歷史走勢</string>
-    <string name="main_tile_food_desc">查看食物價格、數量與日期</string>
-    <string name="main_tile_notes_desc">快速查看鋒兄筆記內容</string>
-    <string name="main_tile_common_desc">直接列出鋒兄常用資料</string>
+    <string name="main_section_label">功能選單</string>
+    <string name="main_tile_subscription_desc">追蹤每筆訂閱的費用、帳戶與到期時間</string>
+    <string name="main_tile_oil_desc">抓取最新官方油價資訊並顯示更新時間</string>
+    <string name="main_tile_bank_desc">彙整銀行帳戶、存款與常用資料</string>
+    <string name="main_tile_us_debt_desc">查看最新美國國債資料與更新時間</string>
+    <string name="main_tile_food_desc">管理食物紀錄、價格與保存期限</string>
+    <string name="main_tile_notes_desc">整理文章、連結與常用筆記</string>
+    <string name="main_tile_common_desc">查看常用帳號與共用資訊</string>
+    <string name="main_tile_lottery_reason_desc">官方台彩逐期號碼與指定組合比對</string>
 
     <string name="menu_bank_stats">銀行統計</string>
-    <string name="notification_channel_name">訂閱到期提醒</string>
-    <string name="notification_channel_description">顯示最近到期的訂閱通知</string>
+    <string name="notification_channel_name">訂閱通知</string>
+    <string name="notification_channel_description">用來提醒訂閱即將到期的通知頻道</string>
 
-    <string name="ui_error_prefix">載入失敗: </string>
+    <string name="ui_error_prefix">錯誤: </string>
     <string name="ui_close">關閉</string>
     <string name="ui_today_due">今天到期</string>
     <string name="ui_due_tomorrow">明天到期</string>
@@ -30,38 +32,39 @@
     <string name="ui_due_in_days">%1$d 天後到期</string>
 
     <string name="screen_subscription_eyebrow">Subscription</string>
-    <string name="screen_subscription_subtitle">列出訂閱名稱、帳號、費用與日期</string>
-    <string name="subscription_search_hint">搜尋標題或內容</string>
+    <string name="screen_subscription_subtitle">集中查看訂閱服務、到期時間與費用。</string>
+    <string name="subscription_search_hint">搜尋名稱或帳戶</string>
     <string name="screen_bank_eyebrow">Banking</string>
-    <string name="screen_bank_subtitle">查看銀行資料、帳戶與金額摘要</string>
+    <string name="screen_bank_subtitle">彙整銀行資料與總存款。</string>
     <string name="screen_food_eyebrow">Food</string>
-    <string name="screen_food_subtitle">列出食物價格、數量、商店與日期</string>
-    <string name="food_search_hint">搜尋標題或內容</string>
+    <string name="screen_food_subtitle">管理食物品項、價格與日期資訊。</string>
+    <string name="food_search_hint">搜尋名稱或店家</string>
     <string name="screen_notes_eyebrow">Notes</string>
-    <string name="screen_notes_subtitle">集中查看鋒兄筆記與連結</string>
+    <string name="screen_notes_subtitle">整理文章標題與相關連結。</string>
     <string name="notes_search_hint">搜尋標題或內容</string>
     <string name="screen_common_eyebrow">Common</string>
-    <string name="screen_common_subtitle">直接列出鋒兄常用資料</string>
+    <string name="screen_common_subtitle">列出常用帳號與備註。</string>
 
-    <string name="subscription_alert_title">訂閱即將到期</string>
-    <string name="subscription_alert_item">%1$s - %2$s到期 (%3$s %4$s)\n  %5$s</string>
+    <string name="subscription_alert_title">訂閱到期提醒</string>
+    <string name="subscription_alert_item">%1$s - %2$s (%3$s %4$s)
+  %5$s</string>
     <string name="subscription_due_suffix">到期</string>
     <string name="subscription_price_label">價格</string>
-    <string name="subscription_account_label">帳號</string>
-    <string name="subscription_next_date_label">日期</string>
+    <string name="subscription_account_label">帳戶</string>
+    <string name="subscription_next_date_label">下次日期</string>
     <string name="subscription_created_date_label">建立日期</string>
     <string name="subscription_updated_date_label">更新日期</string>
-    <string name="subscription_notification_content">%1$s 扣款 %2$s %3$s</string>
-    <string name="screen_title_subscription">訂閱管理</string>
+    <string name="subscription_notification_content">%1$s 將於 %2$s %3$s</string>
+    <string name="screen_title_subscription">訂閱到期提醒</string>
     <string name="screen_title_bank">銀行統計</string>
-    <string name="screen_title_food">鋒兄食物</string>
-    <string name="screen_title_notes">鋒兄筆記</string>
-    <string name="screen_title_common">鋒兄常用</string>
-    <string name="screen_title_oil">石油監控</string>
+    <string name="screen_title_food">食物管理</string>
+    <string name="screen_title_notes">常用筆記</string>
+    <string name="screen_title_common">常用資料</string>
+    <string name="screen_title_oil">油價監控</string>
     <string name="screen_title_us_debt">US Debt</string>
 
     <string name="bank_unknown_name">未命名銀行</string>
-    <string name="bank_account_label">帳戶</string>
+    <string name="bank_account_label">帳號</string>
     <string name="bank_deposit_label">存款</string>
     <string name="bank_withdraw_label">提款</string>
     <string name="bank_transfer_label">轉帳</string>
@@ -71,11 +74,11 @@
     <string name="food_unknown_name">未命名食物</string>
     <string name="food_amount_label">數量</string>
     <string name="food_price_label">價格</string>
-    <string name="food_shop_label">商店</string>
+    <string name="food_shop_label">店家</string>
     <string name="food_date_label">日期</string>
     <string name="food_created_date_label">建立日期</string>
     <string name="food_updated_date_label">更新日期</string>
-    <string name="food_expiry_label">到期</string>
+    <string name="food_expiry_label">到期日</string>
 
     <string name="article_untitled">未命名文章</string>
     <string name="article_links_count">%1$d 個連結</string>
@@ -87,18 +90,33 @@
     <string name="value_label_format">%1$s: %2$s</string>
     <string name="currency_value_format">%1$s: $%2$s</string>
     <string name="subscription_title_format">%1$s - %2$s</string>
-    <string name="oil_fetch_error">石油價格載入失敗: %1$s</string>
-    <string name="oil_latest_price">最新油價 %.2f</string>
-    <string name="oil_latest_price_empty">最新油價 --</string>
+    <string name="oil_fetch_error">油價抓取失敗: %1$s</string>
+    <string name="oil_latest_price">最新油價: %.2f</string>
+    <string name="oil_latest_price_empty">最新油價: --</string>
     <string name="oil_quote_date">報價日期: %1$s</string>
     <string name="oil_quote_date_empty">報價日期: --</string>
-    <string name="oil_last_fetched">更新時間: %1$s</string>
-    <string name="oil_last_fetched_empty">更新時間: --</string>
-    <string name="us_debt_source">資料來源: usdebtclock.org 的 U.S. National Debt（即時頁面）</string>
+    <string name="oil_last_fetched">最後更新: %1$s</string>
+    <string name="oil_last_fetched_empty">最後更新: --</string>
+    <string name="us_debt_source">資料來源: usdebtclock.org / U.S. National Debt</string>
     <string name="us_debt_latest_value">US National Debt: %1$s</string>
     <string name="us_debt_latest_empty">US National Debt: --</string>
-    <string name="us_debt_last_fetched">更新時間: %1$s</string>
-    <string name="us_debt_last_fetched_empty">更新時間: --</string>
-    <string name="us_debt_refresh">重新抓取</string>
+    <string name="us_debt_last_fetched">最後更新: %1$s</string>
+    <string name="us_debt_last_fetched_empty">最後更新: --</string>
+    <string name="us_debt_refresh">重新整理</string>
     <string name="us_debt_fetch_error">US Debt 載入失敗: %1$s</string>
+
+    <string name="lottery_reason_intro">資料來源為台灣彩券官方結果 API，依第 5 屆公益彩券有效期間逐期載入，並比對你指定的號碼組合。</string>
+    <string name="lottery_super_title">威力彩</string>
+    <string name="lottery_lotto649_title">大樂透</string>
+    <string name="lottery_daily539_title">今彩539</string>
+    <string name="lottery_super_summary">共 %1$d 期，資料來源：威力彩結果頁</string>
+    <string name="lottery_lotto649_summary">共 %1$d 期，資料來源：大樂透結果頁</string>
+    <string name="lottery_daily539_summary">共 %1$d 期，資料來源：今彩539結果頁</string>
+    <string name="lottery_period_format">第 %1$s 期  %2$s</string>
+    <string name="lottery_numbers_label">開獎號碼</string>
+    <string name="lottery_special_label">特別號</string>
+    <string name="lottery_match_main">主號中 %1$d</string>
+    <string name="lottery_match_special_hit">，特別號中</string>
+    <string name="lottery_match_special_miss">，特別號未中</string>
+    <string name="lottery_hit_numbers_label">命中號碼</string>
 </resources>

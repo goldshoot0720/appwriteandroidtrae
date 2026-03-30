@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, BankStatsActivity.class));
                 return true;
             }
+            if (item.getItemId() == R.id.action_lottery_reason) {
+                startActivity(new Intent(MainActivity.this, LotteryReasonActivity.class));
+                return true;
+            }
             return false;
         });
 
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         View cardFoodManagement = findViewById(R.id.cardFoodManagement);
         View cardFengNotes = findViewById(R.id.cardFengNotes);
         View cardFengCommon = findViewById(R.id.cardFengCommon);
+        View cardLotteryReason = findViewById(R.id.cardLotteryReason);
 
         cardSubscription.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, SubscriptionActivity.class)));
@@ -78,6 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
         cardFengCommon.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, FengCommonActivity.class)));
+
+        cardLotteryReason.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, LotteryReasonActivity.class)));
 
         OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
         OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
