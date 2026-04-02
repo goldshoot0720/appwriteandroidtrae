@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,7 @@ import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         View cardFengNotes = findViewById(R.id.cardFengNotes);
         View cardFengCommon = findViewById(R.id.cardFengCommon);
         View cardLotteryReason = findViewById(R.id.cardLotteryReason);
+        View birthdayEasterEgg = findViewById(R.id.cardBirthdayEasterEgg);
+        TextView textBirthdayTitle = findViewById(R.id.textBirthdayTitle);
+        TextView textBirthdaySubtitle = findViewById(R.id.textBirthdaySubtitle);
 
         cardSubscription.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, SubscriptionActivity.class)));
@@ -86,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
         cardLotteryReason.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, LotteryReasonActivity.class)));
+
+        setupBirthdayEasterEgg(birthdayEasterEgg, textBirthdayTitle, textBirthdaySubtitle);
 
         OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
         OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
@@ -149,5 +157,73 @@ public class MainActivity extends AppCompatActivity {
                 ExistingPeriodicWorkPolicy.KEEP,
                 request
         );
+    }
+
+    private void setupBirthdayEasterEgg(View card, TextView title, TextView subtitle) {
+        Calendar today = Calendar.getInstance();
+        boolean isAprilThird = today.get(Calendar.MONTH) == Calendar.APRIL
+                && today.get(Calendar.DAY_OF_MONTH) == 3;
+
+        if (!isAprilThird) {
+            card.setVisibility(View.GONE);
+            return;
+        }
+
+        card.setVisibility(View.VISIBLE);
+        title.setText(getString(R.string.birthday_easter_egg_title));
+        subtitle.setText(getString(
+                R.string.birthday_easter_egg_subtitle,
+                String.format(Locale.TAIWAN, "%d/%d", today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH))
+        ));
+
+        card.setAlpha(0f);
+        card.setTranslationY(36f);
+        card.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(900L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+
+        title.animate()
+                .scaleX(1.06f)
+                .scaleY(1.06f)
+                .setDuration(900L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> title.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(900L)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .withEndAction(() -> setupBirthdayEasterEggLoop(title, subtitle))
+                        .start())
+                .start();
+    }
+
+    private void setupBirthdayEasterEggLoop(TextView title, TextView subtitle) {
+        title.animate()
+                .rotation(-2f)
+                .translationY(-6f)
+                .setDuration(1100L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> title.animate()
+                        .rotation(2f)
+                        .translationY(0f)
+                        .setDuration(1100L)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .withEndAction(() -> setupBirthdayEasterEggLoop(title, subtitle))
+                        .start())
+                .start();
+
+        subtitle.animate()
+                .alpha(0.72f)
+                .setDuration(1100L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> subtitle.animate()
+                        .alpha(1f)
+                        .setDuration(1100L)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start())
+                .start();
     }
 }

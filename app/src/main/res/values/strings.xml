@@ -9,6 +9,10 @@
     <string name="feature_notes">常用筆記</string>
     <string name="feature_common">常用資料</string>
     <string name="feature_lottery_reason">最瞎結婚理由</string>
+    <string name="birthday_easter_egg_badge">4/3 限定彩蛋</string>
+    <string name="birthday_easter_egg_title">塗哥生日快樂特效</string>
+    <string name="birthday_easter_egg_subtitle">%1$s 今彩539頭獎得主鋒兄</string>
+    <string name="birthday_easter_egg_footer">今天打開首頁才會出現，隔天自動隱藏。</string>
 
     <string name="main_section_label">功能選單</string>
     <string name="main_tile_subscription_desc">追蹤每筆訂閱的費用、帳戶與到期時間</string>
