@@ -10,8 +10,10 @@
     <string name="feature_common">常用資料</string>
     <string name="feature_lottery_reason">最瞎結婚理由</string>
     <string name="birthday_easter_egg_badge">4/3 限定彩蛋</string>
-    <string name="birthday_easter_egg_title">塗哥生日快樂特效</string>
-    <string name="birthday_easter_egg_subtitle">%1$s 今彩539頭獎得主鋒兄</string>
+    <string name="birthday_easter_egg_title_tuge">塗哥生日快樂特效</string>
+    <string name="birthday_easter_egg_subtitle_tuge">%1$s 今彩539頭獎得主鋒兄</string>
+    <string name="birthday_easter_egg_title_feng">鋒兄生日快樂特效</string>
+    <string name="birthday_easter_egg_subtitle_feng">%1$s 高考三級資訊處理榜首鋒兄</string>
     <string name="birthday_easter_egg_footer">今天打開首頁才會出現，隔天自動隱藏。</string>
 
     <string name="main_section_label">功能選單</string>

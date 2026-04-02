@@ -163,18 +163,28 @@ public class MainActivity extends AppCompatActivity {
         Calendar today = Calendar.getInstance();
         boolean isAprilThird = today.get(Calendar.MONTH) == Calendar.APRIL
                 && today.get(Calendar.DAY_OF_MONTH) == 3;
+        boolean isNovemberTwentySeventh = today.get(Calendar.MONTH) == Calendar.NOVEMBER
+                && today.get(Calendar.DAY_OF_MONTH) == 27;
 
-        if (!isAprilThird) {
+        if (!isAprilThird && !isNovemberTwentySeventh) {
             card.setVisibility(View.GONE);
             return;
         }
 
         card.setVisibility(View.VISIBLE);
-        title.setText(getString(R.string.birthday_easter_egg_title));
-        subtitle.setText(getString(
-                R.string.birthday_easter_egg_subtitle,
-                String.format(Locale.TAIWAN, "%d/%d", today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH))
-        ));
+        if (isAprilThird) {
+            title.setText(getString(R.string.birthday_easter_egg_title_tuge));
+            subtitle.setText(getString(
+                    R.string.birthday_easter_egg_subtitle_tuge,
+                    String.format(Locale.TAIWAN, "%d/%d", today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH))
+            ));
+        } else {
+            title.setText(getString(R.string.birthday_easter_egg_title_feng));
+            subtitle.setText(getString(
+                    R.string.birthday_easter_egg_subtitle_feng,
+                    String.format(Locale.TAIWAN, "%d/%d", today.get(Calendar.MONTH) + 1, today.get(Calendar.DAY_OF_MONTH))
+            ));
+        }
 
         card.setAlpha(0f);
         card.setTranslationY(36f);
