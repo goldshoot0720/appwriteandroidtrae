@@ -13,28 +13,22 @@
     <string name="home_icon_oil">油</string>
     <string name="home_icon_bank">銀</string>
     <string name="home_icon_food">食</string>
-    <string name="home_icon_notes">筆</string>
+    <string name="home_icon_notes">記</string>
     <string name="home_icon_common">常</string>
-    <string name="birthday_easter_egg_badge">生日限定彩蛋</string>
+    <string name="birthday_easter_egg_badge">4/3 限定彩蛋</string>
     <string name="birthday_easter_egg_title_tuge">塗哥生日快樂特效</string>
     <string name="birthday_easter_egg_subtitle_tuge">%1$s 今彩539頭獎得主鋒兄</string>
     <string name="birthday_easter_egg_title_feng">鋒兄生日快樂特效</string>
     <string name="birthday_easter_egg_subtitle_feng">%1$s 高考三級資訊處理榜首鋒兄</string>
     <string name="birthday_easter_egg_footer">今天打開首頁才會出現，隔天自動隱藏。</string>
     <string name="home_ascii_feng_bro_label">ASCII ART / FENG BRO</string>
-    <string name="home_ascii_feng_bro_caption">這不是亂碼，是首頁常駐的 feng bro ASCII art。</string>
+    <string name="home_ascii_feng_bro_caption">首頁常駐看板，打開就能看到 feng bro。</string>
     <string name="home_ascii_feng_bro" translatable="false"><![CDATA[
-######## ######## ##    ##  ######
-##       ##       ###   ## ##    ##
-######   #####    ####  ## ##   ####
-##       ##       ## ## ## ##    ##
-##       ######   ##  ####  ######
-
-######  ########   #######
-##   ## ##     ## ##     ##
-######  ########  ##     ##
-##   ## ##   ##   ##     ##
-######  ##    ##   #######
+ ______ _____ _   _  ____    ____  ____   ___
+|  ___| ____| \ | |/ ___|  | __ )|  _ \ / _ \
+| |_  |  _| |  \| | |  _   |  _ \| |_) | | | |
+|  _| | |___| |\  | |_| |  | |_) |  _ <| |_| |
+|_|   |_____|_| \_|\____|  |____/|_| \_\\___/
     ]]></string>
 
     <string name="main_section_label">功能選單</string>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.View;
 import android.widget.TextView;
 
@@ -185,13 +186,54 @@ public class MainActivity extends AppCompatActivity {
             ));
         }
 
-        // Keep the holiday card static to reduce UI complexity on startup.
-        card.setAlpha(1f);
-        card.setTranslationY(0f);
-        title.setScaleX(1f);
-        title.setScaleY(1f);
-        title.setRotation(0f);
-        title.setTranslationY(0f);
-        subtitle.setAlpha(1f);
+        card.setAlpha(0f);
+        card.setTranslationY(36f);
+        card.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setDuration(900L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .start();
+
+        title.animate()
+                .scaleX(1.06f)
+                .scaleY(1.06f)
+                .setDuration(900L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> title.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(900L)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .withEndAction(() -> setupBirthdayEasterEggLoop(title, subtitle))
+                        .start())
+                .start();
+    }
+
+    private void setupBirthdayEasterEggLoop(TextView title, TextView subtitle) {
+        title.animate()
+                .rotation(-2f)
+                .translationY(-6f)
+                .setDuration(1100L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> title.animate()
+                        .rotation(2f)
+                        .translationY(0f)
+                        .setDuration(1100L)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .withEndAction(() -> setupBirthdayEasterEggLoop(title, subtitle))
+                        .start())
+                .start();
+
+        subtitle.animate()
+                .alpha(0.72f)
+                .setDuration(1100L)
+                .setInterpolator(new AccelerateDecelerateInterpolator())
+                .withEndAction(() -> subtitle.animate()
+                        .alpha(1f)
+                        .setDuration(1100L)
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .start())
+                .start();
     }
 }
