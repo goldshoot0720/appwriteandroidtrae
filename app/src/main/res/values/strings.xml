@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">Appwrite Android Trae</string>
 
     <string name="feature_subscription">訂閱到期提醒</string>
@@ -9,27 +9,12 @@
     <string name="feature_notes">常用筆記</string>
     <string name="feature_common">常用資料</string>
     <string name="feature_lottery_reason">最瞎結婚理由</string>
-    <string name="home_icon_subscription">訂</string>
-    <string name="home_icon_oil">油</string>
-    <string name="home_icon_bank">銀</string>
-    <string name="home_icon_food">食</string>
-    <string name="home_icon_notes">記</string>
-    <string name="home_icon_common">常</string>
     <string name="birthday_easter_egg_badge">4/3 限定彩蛋</string>
     <string name="birthday_easter_egg_title_tuge">塗哥生日快樂特效</string>
     <string name="birthday_easter_egg_subtitle_tuge">%1$s 今彩539頭獎得主鋒兄</string>
     <string name="birthday_easter_egg_title_feng">鋒兄生日快樂特效</string>
     <string name="birthday_easter_egg_subtitle_feng">%1$s 高考三級資訊處理榜首鋒兄</string>
     <string name="birthday_easter_egg_footer">今天打開首頁才會出現，隔天自動隱藏。</string>
-    <string name="home_ascii_feng_bro_label">ASCII ART / FENG BRO</string>
-    <string name="home_ascii_feng_bro_caption">首頁常駐看板，打開就能看到 feng bro。</string>
-    <string name="home_ascii_feng_bro" translatable="false"><![CDATA[
- ______ _____ _   _  ____    ____  ____   ___
-|  ___| ____| \ | |/ ___|  | __ )|  _ \ / _ \
-| |_  |  _| |  \| | |  _   |  _ \| |_) | | | |
-|  _| | |___| |\  | |_| |  | |_) |  _ <| |_| |
-|_|   |_____|_| \_|\____|  |____/|_| \_\\___/
-    ]]></string>
 
     <string name="main_section_label">功能選單</string>
     <string name="main_tile_subscription_desc">追蹤每筆訂閱的費用、帳戶與到期時間</string>
@@ -141,4 +126,3 @@
     <string name="lottery_match_special_miss">，特別號未中</string>
     <string name="lottery_hit_numbers_label">命中號碼</string>
 </resources>
-

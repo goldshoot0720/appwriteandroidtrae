@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.View;
 import android.widget.TextView;
@@ -30,7 +29,6 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
     private static final String CHANNEL_ID = "subscription_expiry_channel";
     private static final int REQUEST_POST_NOTIFICATIONS = 1001;
 
@@ -97,37 +95,12 @@ public class MainActivity extends AppCompatActivity {
 
         setupBirthdayEasterEgg(birthdayEasterEgg, textBirthdayTitle, textBirthdaySubtitle);
 
-        initializeBackgroundTasksSafely();
-    }
+        OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
+        OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
 
-    private void initializeBackgroundTasksSafely() {
-        View root = findViewById(R.id.main);
-        root.post(() -> {
-            try {
-                OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
-                OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
-            } catch (RuntimeException e) {
-                Log.w(TAG, "Skipping oil background scheduling during startup", e);
-            }
-
-            try {
-                createNotificationChannel();
-            } catch (RuntimeException e) {
-                Log.w(TAG, "Skipping notification channel setup during startup", e);
-            }
-
-            try {
-                ensureNotificationPermission();
-            } catch (RuntimeException e) {
-                Log.w(TAG, "Skipping notification permission prompt during startup", e);
-            }
-
-            try {
-                scheduleDailySubscriptionCheck();
-            } catch (RuntimeException e) {
-                Log.w(TAG, "Skipping subscription scheduling during startup", e);
-            }
-        });
+        createNotificationChannel();
+        ensureNotificationPermission();
+        scheduleDailySubscriptionCheck();
     }
 
     private void createNotificationChannel() {
