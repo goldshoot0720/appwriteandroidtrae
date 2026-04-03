@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -85,7 +85,6 @@
                     <TextView
                         android:id="@+id/textBirthdaySubtitle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:textColor="@color/sand_50"
                         android:textSize="16sp"
@@ -176,7 +175,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_light"
                         android:gravity="center"
-                        android:text="訂"
+                        android:text="@string/home_icon_subscription"
                         android:textColor="@color/sage_800"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -231,7 +230,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_warm"
                         android:gravity="center"
-                        android:text="油"
+                        android:text="@string/home_icon_oil"
                         android:textColor="@color/accent_gold"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -341,7 +340,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_warm"
                         android:gravity="center"
-                        android:text="銀"
+                        android:text="@string/home_icon_bank"
                         android:textColor="@color/accent_gold"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -396,7 +395,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_soft"
                         android:gravity="center"
-                        android:text="食"
+                        android:text="@string/home_icon_food"
                         android:textColor="@color/accent_coral"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -451,7 +450,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_lilac"
                         android:gravity="center"
-                        android:text="記"
+                        android:text="@string/home_icon_notes"
                         android:textColor="@color/accent_lilac"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -561,7 +560,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_dark"
                         android:gravity="center"
-                        android:text="常"
+                        android:text="@string/home_icon_common"
                         android:textColor="@color/sand_50"
                         android:textSize="18sp"
                         android:textStyle="bold" />
