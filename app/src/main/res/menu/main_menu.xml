@@ -5,4 +5,8 @@
         android:id="@+id/action_bank_stats"
         android:title="@string/menu_bank_stats"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_lottery_reason"
+        android:title="@string/feature_lottery_reason"
+        app:showAsAction="never" />
 </menu>
