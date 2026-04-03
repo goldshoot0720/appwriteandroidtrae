@@ -136,11 +136,11 @@
                         android:layout_marginTop="16dp"
                         android:fontFamily="monospace"
                         android:gravity="center_horizontal"
-                        android:lineSpacingExtra="2dp"
+                        android:lineSpacingExtra="1dp"
                         android:text="@string/home_ascii_feng_bro"
                         android:textColor="@color/sand_50"
                         android:textIsSelectable="false"
-                        android:textSize="12sp" />
+                        android:textSize="10sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
