@@ -90,7 +90,7 @@
                         android:textColor="@color/sand_50"
                         android:textSize="16sp"
                         android:textStyle="bold"
-                        tools:text="4/3 今彩539頭獎得主鋒兄" />
+                        tools:text="4/3 隞蔗539?剔?敺蜓??" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -126,7 +126,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_light"
                         android:gravity="center"
-                        android:text="訂"
+                        android:text="@string/home_icon_subscription"
                         android:textColor="@color/sage_800"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -181,7 +181,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_warm"
                         android:gravity="center"
-                        android:text="油"
+                        android:text="@string/home_icon_oil"
                         android:textColor="@color/accent_gold"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -206,6 +206,61 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="@string/main_tile_oil_desc"
+                            android:textColor="@color/slate_700"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardBatteryStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/surface_high"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/surface_outline">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_tile_icon_light"
+                        android:gravity="center"
+                        android:text="@string/home_icon_battery"
+                        android:textColor="@color/sage_800"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/feature_battery_status"
+                            android:textColor="@color/slate_950"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/main_tile_battery_desc"
                             android:textColor="@color/slate_700"
                             android:textSize="13sp" />
                     </LinearLayout>
@@ -291,7 +346,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_warm"
                         android:gravity="center"
-                        android:text="銀"
+                        android:text="@string/home_icon_bank"
                         android:textColor="@color/accent_gold"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -346,7 +401,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_soft"
                         android:gravity="center"
-                        android:text="食"
+                        android:text="@string/home_icon_food"
                         android:textColor="@color/accent_coral"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -401,7 +456,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_lilac"
                         android:gravity="center"
-                        android:text="記"
+                        android:text="@string/home_icon_notes"
                         android:textColor="@color/accent_lilac"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -511,7 +566,7 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_tile_icon_dark"
                         android:gravity="center"
-                        android:text="常"
+                        android:text="@string/home_icon_common"
                         android:textColor="@color/sand_50"
                         android:textSize="18sp"
                         android:textStyle="bold" />

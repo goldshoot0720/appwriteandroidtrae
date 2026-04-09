@@ -10,6 +10,13 @@
     <string name="feature_common">常用資料</string>
     <string name="feature_lottery_reason">最瞎結婚理由</string>
     <string name="feature_battery_status">電池選單</string>
+    <string name="home_icon_battery">電</string>
+    <string name="home_icon_subscription">訂</string>
+    <string name="home_icon_oil">油</string>
+    <string name="home_icon_bank">銀</string>
+    <string name="home_icon_food">食</string>
+    <string name="home_icon_notes">記</string>
+    <string name="home_icon_common">常</string>
     <string name="birthday_easter_egg_badge">4/3 限定彩蛋</string>
     <string name="birthday_easter_egg_title_tuge">塗哥生日快樂特效</string>
     <string name="birthday_easter_egg_subtitle_tuge">%1$s 今彩539頭獎得主鋒兄</string>
@@ -26,6 +33,7 @@
     <string name="main_tile_notes_desc">整理文章、連結與常用筆記</string>
     <string name="main_tile_common_desc">查看常用帳號與共用資訊</string>
     <string name="main_tile_lottery_reason_desc">官方台彩逐期號碼與指定組合比對</string>
+    <string name="main_tile_battery_desc">上次充滿電時間與剩餘電量估算</string>
 
     <string name="menu_bank_stats">銀行統計</string>
     <string name="notification_channel_name">訂閱通知</string>

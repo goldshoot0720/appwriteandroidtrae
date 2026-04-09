@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         View cardSubscription = findViewById(R.id.cardSubscription);
         View cardOilMonitor = findViewById(R.id.cardOilMonitor);
         View cardUsDebt = findViewById(R.id.cardUsDebt);
+        View cardBatteryStatus = findViewById(R.id.cardBatteryStatus);
         View cardBankStats = findViewById(R.id.cardBankStats);
         View cardFoodManagement = findViewById(R.id.cardFoodManagement);
         View cardFengNotes = findViewById(R.id.cardFengNotes);
@@ -81,6 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
         cardUsDebt.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, USDebtActivity.class)));
+
+        cardBatteryStatus.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, BatteryStatusActivity.class)));
 
         cardBankStats.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, BankStatsActivity.class)));
