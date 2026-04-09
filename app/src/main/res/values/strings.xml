@@ -64,6 +64,8 @@
     <string name="subscription_created_date_label">建立日期</string>
     <string name="subscription_updated_date_label">更新日期</string>
     <string name="subscription_notification_content">%1$s 將於 %2$s %3$s</string>
+    <string name="subscription_days_until">距離今天 %1$d 天</string>
+    <string name="subscription_days_overdue">已過 %1$d 天</string>
     <string name="screen_title_subscription">訂閱到期提醒</string>
     <string name="screen_title_bank">銀行統計</string>
     <string name="screen_title_food">食物管理</string>
@@ -89,6 +91,8 @@
     <string name="food_created_date_label">建立日期</string>
     <string name="food_updated_date_label">更新日期</string>
     <string name="food_expiry_label">到期日</string>
+    <string name="food_days_until">距離今天 %1$d 天</string>
+    <string name="food_days_overdue">已過 %1$d 天</string>
 
     <string name="article_untitled">未命名文章</string>
     <string name="article_links_count">%1$d 個連結</string>

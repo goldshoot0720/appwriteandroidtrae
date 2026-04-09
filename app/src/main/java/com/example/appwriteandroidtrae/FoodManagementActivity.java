@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class FoodManagementActivity extends AppCompatActivity {
 
@@ -147,6 +148,7 @@ public class FoodManagementActivity extends AppCompatActivity {
             TextView textPrice = convertView.findViewById(R.id.textFoodPrice);
             TextView textShop = convertView.findViewById(R.id.textFoodShop);
             TextView textDate = convertView.findViewById(R.id.textFoodDate);
+            TextView textDateDelta = convertView.findViewById(R.id.textFoodDateDelta);
 
             if (item != null) {
                 textName.setText(item.name != null && !item.name.isEmpty()
@@ -194,8 +196,22 @@ public class FoodManagementActivity extends AppCompatActivity {
                             getContext().getString(labelRes),
                             dateFormat.format(new Date(visibleDateMillis))
                     ));
+                    long daysDelta = TimeUnit.MILLISECONDS.toDays(visibleDateMillis - System.currentTimeMillis());
+                    if (daysDelta >= 0) {
+                        textDateDelta.setText(getContext().getString(
+                                R.string.food_days_until,
+                                daysDelta
+                        ));
+                    } else {
+                        textDateDelta.setText(getContext().getString(
+                                R.string.food_days_overdue,
+                                Math.abs(daysDelta)
+                        ));
+                    }
+                    textDateDelta.setVisibility(View.VISIBLE);
                 } else {
                     textDate.setVisibility(View.GONE);
+                    textDateDelta.setVisibility(View.GONE);
                 }
             }
 

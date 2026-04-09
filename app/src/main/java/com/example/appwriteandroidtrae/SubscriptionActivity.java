@@ -265,6 +265,7 @@ public class SubscriptionActivity extends AppCompatActivity {
             TextView textPrice = convertView.findViewById(R.id.textPrice);
             TextView textAccount = convertView.findViewById(R.id.textAccount);
             TextView textNextDate = convertView.findViewById(R.id.textNextDate);
+            TextView textNextDateDelta = convertView.findViewById(R.id.textNextDateDelta);
             TextView textCreatedDate = convertView.findViewById(R.id.textCreatedDate);
             TextView textNote = convertView.findViewById(R.id.textNote);
 
@@ -307,8 +308,22 @@ public class SubscriptionActivity extends AppCompatActivity {
                             getContext().getString(R.string.subscription_next_date_label),
                             dateFormat.format(new Date(item.nextDateMillis))
                     ));
+                    long daysDelta = TimeUnit.MILLISECONDS.toDays(item.nextDateMillis - System.currentTimeMillis());
+                    if (daysDelta >= 0) {
+                        textNextDateDelta.setText(getContext().getString(
+                                R.string.subscription_days_until,
+                                daysDelta
+                        ));
+                    } else {
+                        textNextDateDelta.setText(getContext().getString(
+                                R.string.subscription_days_overdue,
+                                Math.abs(daysDelta)
+                        ));
+                    }
+                    textNextDateDelta.setVisibility(View.VISIBLE);
                 } else {
                     textNextDate.setVisibility(View.GONE);
+                    textNextDateDelta.setVisibility(View.GONE);
                 }
 
                 textCreatedDate.setVisibility(View.GONE);
