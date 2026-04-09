@@ -18,6 +18,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -125,7 +127,32 @@ public class FengNotesActivity extends AppCompatActivity {
             }
         }
 
+        sortArticlesByDateDesc(filteredArticles);
         adapter.notifyDataSetChanged();
+    }
+
+    private void sortArticlesByDateDesc(List<AppwriteHelper.ArticleItem> items) {
+        Collections.sort(items, new Comparator<AppwriteHelper.ArticleItem>() {
+            @Override
+            public int compare(AppwriteHelper.ArticleItem left, AppwriteHelper.ArticleItem right) {
+                long leftMillis = getArticleTimestamp(left);
+                long rightMillis = getArticleTimestamp(right);
+                return Long.compare(rightMillis, leftMillis);
+            }
+        });
+    }
+
+    private long getArticleTimestamp(AppwriteHelper.ArticleItem item) {
+        if (item == null) {
+            return 0L;
+        }
+        if (item.newDateMillis > 0) {
+            return item.newDateMillis;
+        }
+        if (item.createdAtMillis > 0) {
+            return item.createdAtMillis;
+        }
+        return Math.max(item.updatedAtMillis, 0L);
     }
 
     private static class ArticleAdapter extends ArrayAdapter<AppwriteHelper.ArticleItem> {
