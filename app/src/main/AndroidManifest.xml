@@ -73,6 +73,12 @@
             android:label="@string/feature_us_debt"
             android:parentActivityName=".MainActivity" />
 
+        <activity
+            android:name=".BatteryStatusActivity"
+            android:exported="false"
+            android:label="@string/feature_battery_status"
+            android:parentActivityName=".MainActivity" />
+
         <receiver
             android:name=".BootReceiver"
             android:enabled="true"

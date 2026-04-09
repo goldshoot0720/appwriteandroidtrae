@@ -9,6 +9,7 @@
     <string name="feature_notes">常用筆記</string>
     <string name="feature_common">常用資料</string>
     <string name="feature_lottery_reason">最瞎結婚理由</string>
+    <string name="feature_battery_status">電池選單</string>
     <string name="birthday_easter_egg_badge">4/3 限定彩蛋</string>
     <string name="birthday_easter_egg_title_tuge">塗哥生日快樂特效</string>
     <string name="birthday_easter_egg_subtitle_tuge">%1$s 今彩539頭獎得主鋒兄</string>
@@ -50,6 +51,8 @@
     <string name="notes_search_hint">搜尋標題或內容</string>
     <string name="screen_common_eyebrow">Common</string>
     <string name="screen_common_subtitle">列出常用帳號與備註。</string>
+    <string name="screen_battery_eyebrow">Battery</string>
+    <string name="screen_battery_subtitle">整理最近一次充滿電與目前電量狀態。</string>
 
     <string name="subscription_alert_title">訂閱到期提醒</string>
     <string name="subscription_alert_item">%1$s - %2$s (%3$s %4$s)
@@ -68,6 +71,7 @@
     <string name="screen_title_common">常用資料</string>
     <string name="screen_title_oil">油價監控</string>
     <string name="screen_title_us_debt">US Debt</string>
+    <string name="screen_title_battery">電池選單</string>
 
     <string name="bank_unknown_name">未命名銀行</string>
     <string name="bank_account_label">帳號</string>
@@ -110,6 +114,17 @@
     <string name="us_debt_last_fetched_empty">最後更新: --</string>
     <string name="us_debt_refresh">重新整理</string>
     <string name="us_debt_fetch_error">US Debt 載入失敗: %1$s</string>
+
+    <string name="battery_label_last_full_time">上次充滿電時間</string>
+    <string name="battery_label_last_full_delta">上次充滿電距離當下時間差</string>
+    <string name="battery_label_current_level">現在電量</string>
+    <string name="battery_label_estimated_time">預估電量時間</string>
+    <string name="battery_label_estimated_delta">預估電量時間距離當下時間差</string>
+    <string name="battery_value_unknown">未知</string>
+    <string name="battery_value_percent">%1$d%%</string>
+    <string name="battery_value_duration_days">%1$d 天 %2$d 小時 %3$d 分鐘</string>
+    <string name="battery_value_duration_hours">%1$d 小時 %2$d 分鐘</string>
+    <string name="battery_value_duration_minutes">%1$d 分鐘</string>
 
     <string name="lottery_reason_intro">資料來源為台灣彩券官方結果 API，依第 5 屆公益彩券有效期間逐期載入，並比對你指定的號碼組合。</string>
     <string name="lottery_super_title">威力彩</string>

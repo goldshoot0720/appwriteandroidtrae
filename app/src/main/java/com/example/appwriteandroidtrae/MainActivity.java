@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LotteryReasonActivity.class));
                 return true;
             }
+            if (item.getItemId() == R.id.action_battery_status) {
+                startActivity(new Intent(MainActivity.this, BatteryStatusActivity.class));
+                return true;
+            }
             return false;
         });
 

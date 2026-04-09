@@ -9,4 +9,8 @@
         android:id="@+id/action_lottery_reason"
         android:title="@string/feature_lottery_reason"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_battery_status"
+        android:title="@string/feature_battery_status"
+        app:showAsAction="never" />
 </menu>
