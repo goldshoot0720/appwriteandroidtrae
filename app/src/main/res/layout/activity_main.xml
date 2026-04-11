@@ -634,6 +634,17 @@
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/textCodeLineCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/slate_500"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:text="@string/code_line_count_placeholder" />
         </LinearLayout>
     </ScrollView>
 

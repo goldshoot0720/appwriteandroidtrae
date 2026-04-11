@@ -116,10 +116,21 @@ public class SubscriptionActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             progressBar.setVisibility(View.GONE);
                             textViewError.setVisibility(View.VISIBLE);
-                            textViewError.setText(getString(R.string.generic_load_error, error.getMessage()));
+                            textViewError.setText(getReadableError(error));
                         });
                     }
                 });
+    }
+
+    private String getReadableError(Exception error) {
+        if (error == null || error.getMessage() == null) {
+            return getString(R.string.generic_load_error, "");
+        }
+        String message = error.getMessage();
+        if (message.contains("401") || message.contains("missing scopes") || message.contains("missing scope")) {
+            return getString(R.string.error_unauthorized);
+        }
+        return getString(R.string.generic_load_error, message);
     }
 
     private void filterSubscriptions(String query) {

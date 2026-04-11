@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private Runnable sleepRunnable;
     private View cardSleepHint;
     private TextView textSleepHint;
+    private TextView textCodeLineCount;
+    private static final int CODE_LINE_COUNT = 6076;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         View cardLotteryReason = findViewById(R.id.cardLotteryReason);
         cardSleepHint = findViewById(R.id.cardSleepHint);
         textSleepHint = findViewById(R.id.textSleepHint);
+        textCodeLineCount = findViewById(R.id.textCodeLineCount);
         View birthdayEasterEgg = findViewById(R.id.cardBirthdayEasterEgg);
         TextView textBirthdayTitle = findViewById(R.id.textBirthdayTitle);
         TextView textBirthdaySubtitle = findViewById(R.id.textBirthdaySubtitle);
@@ -119,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
 
         setupBirthdayEasterEgg(birthdayEasterEgg, textBirthdayTitle, textBirthdaySubtitle);
         startSleepHintScheduler();
+        if (textCodeLineCount != null) {
+            textCodeLineCount.setText(getString(R.string.code_line_count_label, CODE_LINE_COUNT));
+        }
 
         OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
         OilPriceScheduler.scheduleDailyFetch(getApplicationContext());

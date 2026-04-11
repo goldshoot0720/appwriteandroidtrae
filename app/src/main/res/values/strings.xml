@@ -37,6 +37,8 @@
     <string name="main_tile_battery_desc">上次充滿電時間與剩餘電量估算</string>
     <string name="sleep_hint_label">睡眠提示</string>
     <string name="sleep_hint_placeholder">00:00-04:00 期間會顯示提示次數</string>
+    <string name="code_line_count_placeholder">程式碼行數</string>
+    <string name="code_line_count_label">程式碼行數: %1$d</string>
 
     <string name="menu_bank_stats">銀行統計</string>
     <string name="notification_channel_name">訂閱通知</string>
@@ -111,6 +113,7 @@
     <string name="common_uncategorized">未分類</string>
     <string name="common_items_count">%1$d 筆</string>
     <string name="generic_load_error">載入失敗: %1$s</string>
+    <string name="error_unauthorized">401 未授權，請設定 API Key 或開放 collections.read 權限。</string>
     <string name="date_label_format">%1$s: %2$s</string>
     <string name="value_label_format">%1$s: %2$s</string>
     <string name="currency_value_format">%1$s: $%2$s</string>
