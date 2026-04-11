@@ -28,7 +28,7 @@ public class AppwriteHelper {
     private static final String APPWRITE_ENDPOINT = "https://sgp.cloud.appwrite.io/v1";
     private static final String APPWRITE_PROJECT_ID = "698212e50017eada99c8";
     private static final String APPWRITE_DATABASE_ID = "69821743002139037da1";
-    private static final String APPWRITE_SUBSCRIPTION_COLLECTION_ID = "69b24465002d43df9b00";
+    private static final String APPWRITE_SUBSCRIPTION_COLLECTION_ID = "69d927310016a98cc2db";
     private static final String APPWRITE_SUBSCRIPTION_TABLE_HINT_ID = "wu6rul";
     private static final String APPWRITE_BANK_COLLECTION_ID = "698217de00124b27ff8a";
     private static final String APPWRITE_ARTICLE_COLLECTION_ID = "6989e1a1003c507a9937";
