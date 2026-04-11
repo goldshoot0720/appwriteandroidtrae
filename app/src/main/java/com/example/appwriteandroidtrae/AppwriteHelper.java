@@ -29,10 +29,13 @@ public class AppwriteHelper {
     private static final String APPWRITE_PROJECT_ID = "698212e50017eada99c8";
     private static final String APPWRITE_DATABASE_ID = "69821743002139037da1";
     private static final String APPWRITE_SUBSCRIPTION_COLLECTION_ID = "69b24465002d43df9b00";
+    private static final String APPWRITE_SUBSCRIPTION_TABLE_HINT_ID = "wu6rul";
     private static final String APPWRITE_BANK_COLLECTION_ID = "698217de00124b27ff8a";
     private static final String APPWRITE_ARTICLE_COLLECTION_ID = "6989e1a1003c507a9937";
     private static final String APPWRITE_FOOD_COLLECTION_ID = "6982180a000316b84b3f";
     private static final String APPWRITE_COMMON_ACCOUNT_COLLECTION_ID = "698217e40016df4e7ca9";
+    private static final String PREFS_COLLECTION_CACHE = "appwrite_collection_cache";
+    private static final String PREFS_SUBSCRIPTION_COLLECTION_ID = "subscription_collection_id";
 
     private static AppwriteHelper instance;
 
@@ -342,7 +345,30 @@ public class AppwriteHelper {
     }
 
     private List<SubscriptionItem> fetchSubscriptions() throws Exception {
-        return fetchData(APPWRITE_SUBSCRIPTION_COLLECTION_ID, this::parseDocuments);
+        String cached = getCachedSubscriptionCollectionId();
+        if (cached != null && !cached.isEmpty()) {
+            try {
+                return fetchData(cached, this::parseDocuments);
+            } catch (Exception e) {
+                if (!isCollectionNotFound(e)) {
+                    throw e;
+                }
+                clearCachedSubscriptionCollectionId();
+            }
+        }
+
+        try {
+            return fetchData(APPWRITE_SUBSCRIPTION_COLLECTION_ID, this::parseDocuments);
+        } catch (Exception e) {
+            if (!isCollectionNotFound(e)) {
+                throw e;
+            }
+            String resolved = resolveSubscriptionCollectionId();
+            if (!APPWRITE_SUBSCRIPTION_COLLECTION_ID.equals(resolved)) {
+                return fetchData(resolved, this::parseDocuments);
+            }
+            throw e;
+        }
     }
 
     private List<BankItem> fetchBanks() throws Exception {
@@ -389,6 +415,101 @@ public class AppwriteHelper {
         }
 
         return allItems;
+    }
+
+    private String resolveSubscriptionCollectionId() throws Exception {
+        String cached = getCachedSubscriptionCollectionId();
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
+
+        List<CollectionInfo> collections = listCollections();
+        String resolved = null;
+        for (CollectionInfo info : collections) {
+            if (APPWRITE_SUBSCRIPTION_TABLE_HINT_ID.equals(info.id)) {
+                resolved = info.id;
+                break;
+            }
+        }
+        if (resolved == null) {
+            for (CollectionInfo info : collections) {
+                String name = info.name != null ? info.name.toLowerCase(Locale.getDefault()) : "";
+                if (name.contains("subscription") || name.contains("subscribe") || name.contains("訂閱")) {
+                    resolved = info.id;
+                    break;
+                }
+            }
+        }
+        if (resolved == null) {
+            resolved = APPWRITE_SUBSCRIPTION_COLLECTION_ID;
+        }
+        cacheSubscriptionCollectionId(resolved);
+        return resolved;
+    }
+
+    private List<CollectionInfo> listCollections() throws Exception {
+        List<CollectionInfo> results = new ArrayList<>();
+        int offset = 0;
+        while (true) {
+            String path = "/databases/" + APPWRITE_DATABASE_ID
+                    + "/collections?limit=" + PAGE_LIMIT + "&offset=" + offset;
+            String responseStr = request(path);
+            JSONObject root = new JSONObject(responseStr);
+            JSONArray collections = root.optJSONArray("collections");
+            if (collections == null) {
+                break;
+            }
+            for (int i = 0; i < collections.length(); i++) {
+                JSONObject collection = collections.getJSONObject(i);
+                String id = collection.optString("$id");
+                String name = collection.optString("name");
+                results.add(new CollectionInfo(id, name));
+            }
+            if (collections.length() < PAGE_LIMIT) {
+                break;
+            }
+            offset += PAGE_LIMIT;
+        }
+        return results;
+    }
+
+    private boolean isCollectionNotFound(Exception e) {
+        if (e == null || e.getMessage() == null) {
+            return false;
+        }
+        String message = e.getMessage();
+        return message.contains("collection_not_found")
+                || message.contains("Collection with the requested ID")
+                || message.contains("collection with the requested ID");
+    }
+
+    private String getCachedSubscriptionCollectionId() {
+        return context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
+                .getString(PREFS_SUBSCRIPTION_COLLECTION_ID, "");
+    }
+
+    private void cacheSubscriptionCollectionId(String id) {
+        context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
+                .edit()
+                .putString(PREFS_SUBSCRIPTION_COLLECTION_ID, id)
+                .apply();
+    }
+
+    private void clearCachedSubscriptionCollectionId() {
+        context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
+                .edit()
+                .remove(PREFS_SUBSCRIPTION_COLLECTION_ID)
+                .apply();
+    }
+
+    private static class CollectionInfo {
+        final String id;
+        final String name;
+
+        CollectionInfo(String id, String name) {
+            this.id = id;
+            this.name = name;
+        }
     }
     private String request(String path) throws Exception {
         HttpURLConnection connection = null;
