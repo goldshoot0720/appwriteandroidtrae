@@ -346,30 +346,17 @@ public class AppwriteHelper {
     }
 
     private List<SubscriptionItem> fetchSubscriptions() throws Exception {
-        String cached = getCachedSubscriptionCollectionId();
-        if (cached != null && !cached.isEmpty()) {
+        String resolved = resolveSubscriptionCollectionId();
+        if (resolved != null && !resolved.isEmpty()) {
             try {
-                return fetchData(cached, this::parseDocuments);
+                return fetchData(resolved, this::parseDocuments);
             } catch (Exception e) {
                 if (!isCollectionNotFound(e)) {
                     throw e;
                 }
-                clearCachedSubscriptionCollectionId();
             }
         }
-
-        try {
-            return fetchData(APPWRITE_SUBSCRIPTION_COLLECTION_ID, this::parseDocuments);
-        } catch (Exception e) {
-            if (!isCollectionNotFound(e)) {
-                throw e;
-            }
-            String resolved = resolveSubscriptionCollectionId();
-            if (!APPWRITE_SUBSCRIPTION_COLLECTION_ID.equals(resolved)) {
-                return fetchData(resolved, this::parseDocuments);
-            }
-            throw e;
-        }
+        return fetchData(APPWRITE_SUBSCRIPTION_COLLECTION_ID, this::parseDocuments);
     }
 
     private List<BankItem> fetchBanks() throws Exception {
@@ -381,30 +368,17 @@ public class AppwriteHelper {
     }
 
     private List<FoodItem> fetchFoods() throws Exception {
-        String cached = getCachedFoodCollectionId();
-        if (cached != null && !cached.isEmpty()) {
+        String resolved = resolveFoodCollectionId();
+        if (resolved != null && !resolved.isEmpty()) {
             try {
-                return fetchData(cached, this::parseFoods);
+                return fetchData(resolved, this::parseFoods);
             } catch (Exception e) {
                 if (!isCollectionNotFound(e)) {
                     throw e;
                 }
-                clearCachedFoodCollectionId();
             }
         }
-
-        try {
-            return fetchData(APPWRITE_FOOD_COLLECTION_ID, this::parseFoods);
-        } catch (Exception e) {
-            if (!isCollectionNotFound(e)) {
-                throw e;
-            }
-            String resolved = resolveFoodCollectionId();
-            if (!APPWRITE_FOOD_COLLECTION_ID.equals(resolved)) {
-                return fetchData(resolved, this::parseFoods);
-            }
-            throw e;
-        }
+        return fetchData(APPWRITE_FOOD_COLLECTION_ID, this::parseFoods);
     }
 
     private List<CommonAccountItem> fetchCommonAccounts() throws Exception {
@@ -442,11 +416,6 @@ public class AppwriteHelper {
     }
 
     private String resolveSubscriptionCollectionId() throws Exception {
-        String cached = getCachedSubscriptionCollectionId();
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
-
         List<CollectionInfo> collections = listCollections();
         String resolved = null;
         for (CollectionInfo info : collections) {
@@ -472,11 +441,6 @@ public class AppwriteHelper {
     }
 
     private String resolveFoodCollectionId() throws Exception {
-        String cached = getCachedFoodCollectionId();
-        if (cached != null && !cached.isEmpty()) {
-            return cached;
-        }
-
         List<CollectionInfo> collections = listCollections();
         String resolved = null;
         for (CollectionInfo info : collections) {
@@ -583,6 +547,10 @@ public class AppwriteHelper {
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
             connection.setRequestProperty("X-Appwrite-Project", APPWRITE_PROJECT_ID);
+            String apiKey = getApiKey();
+            if (apiKey != null && !apiKey.isEmpty()) {
+                connection.setRequestProperty("X-Appwrite-Key", apiKey);
+            }
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(15000);
 
@@ -607,6 +575,15 @@ public class AppwriteHelper {
             if (connection != null) {
                 connection.disconnect();
             }
+        }
+    }
+
+    private String getApiKey() {
+        try {
+            String key = context.getString(R.string.appwrite_api_key);
+            return key != null ? key.trim() : "";
+        } catch (Exception e) {
+            return "";
         }
     }
 
