@@ -346,16 +346,6 @@ public class AppwriteHelper {
     }
 
     private List<SubscriptionItem> fetchSubscriptions() throws Exception {
-        String resolved = resolveSubscriptionCollectionId();
-        if (resolved != null && !resolved.isEmpty()) {
-            try {
-                return fetchData(resolved, this::parseDocuments);
-            } catch (Exception e) {
-                if (!isCollectionNotFound(e)) {
-                    throw e;
-                }
-            }
-        }
         return fetchData(APPWRITE_SUBSCRIPTION_COLLECTION_ID, this::parseDocuments);
     }
 
@@ -368,16 +358,6 @@ public class AppwriteHelper {
     }
 
     private List<FoodItem> fetchFoods() throws Exception {
-        String resolved = resolveFoodCollectionId();
-        if (resolved != null && !resolved.isEmpty()) {
-            try {
-                return fetchData(resolved, this::parseFoods);
-            } catch (Exception e) {
-                if (!isCollectionNotFound(e)) {
-                    throw e;
-                }
-            }
-        }
         return fetchData(APPWRITE_FOOD_COLLECTION_ID, this::parseFoods);
     }
 
