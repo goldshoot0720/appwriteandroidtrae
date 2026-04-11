@@ -74,6 +74,12 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".PriceCompareActivity"
+            android:exported="false"
+            android:label="@string/feature_price_compare"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
             android:name=".BatteryStatusActivity"
             android:exported="false"
             android:label="@string/feature_battery_status"

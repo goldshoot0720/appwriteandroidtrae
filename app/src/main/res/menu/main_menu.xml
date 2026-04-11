@@ -13,4 +13,8 @@
         android:id="@+id/action_battery_status"
         android:title="@string/feature_battery_status"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_price_compare"
+        android:title="@string/menu_price_compare"
+        app:showAsAction="never" />
 </menu>

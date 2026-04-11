@@ -74,12 +74,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, BatteryStatusActivity.class));
                 return true;
             }
+            if (item.getItemId() == R.id.action_price_compare) {
+                startActivity(new Intent(MainActivity.this, PriceCompareActivity.class));
+                return true;
+            }
             return false;
         });
 
         View cardSubscription = findViewById(R.id.cardSubscription);
         View cardOilMonitor = findViewById(R.id.cardOilMonitor);
         View cardUsDebt = findViewById(R.id.cardUsDebt);
+        View cardPriceCompare = findViewById(R.id.cardPriceCompare);
         View cardBatteryStatus = findViewById(R.id.cardBatteryStatus);
         View cardBankStats = findViewById(R.id.cardBankStats);
         View cardFoodManagement = findViewById(R.id.cardFoodManagement);
@@ -101,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
 
         cardUsDebt.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, USDebtActivity.class)));
+
+        cardPriceCompare.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, PriceCompareActivity.class)));
 
         cardBatteryStatus.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, BatteryStatusActivity.class)));

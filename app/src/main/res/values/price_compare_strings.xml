@@ -1,0 +1,58 @@
+<resources>
+    <string name="feature_price_compare">鋒兄比價</string>
+    <string name="menu_price_compare">鋒兄比價</string>
+    <string name="home_icon_price_compare">價</string>
+    <string name="main_tile_price_compare_desc">支援 PChome / momo 連結，整理價格走勢與統計。</string>
+
+    <string name="price_compare_eyebrow">PRICE COMPARE</string>
+    <string name="price_compare_intro">貼上 PChome 或 momo 商品連結，快速整理最近價格走勢與統計。</string>
+
+    <string name="price_compare_url_label">商品連結</string>
+    <string name="price_compare_url_hint">https://24h.pchome.com.tw/prod/...</string>
+    <string name="price_compare_range_label">查詢天數</string>
+    <string name="price_compare_generate">產生圖表</string>
+    <string name="price_compare_paste">貼上剪貼簿</string>
+    <string name="price_compare_clear">清空</string>
+
+    <string name="price_compare_status_ready">待命中</string>
+    <string name="price_compare_status_pasted">已貼上剪貼簿內容</string>
+    <string name="price_compare_status_cleared">已清空</string>
+    <string name="price_compare_status_missing_url">請先輸入商品連結</string>
+    <string name="price_compare_status_done">完成</string>
+    <string name="price_compare_status_applied">已帶入選取連結</string>
+    <string name="price_compare_status_removed">已移除選取連結</string>
+
+    <string name="price_compare_result_label">結果</string>
+    <string name="price_compare_result_placeholder">尚未產生結果，請先輸入連結。</string>
+    <string name="price_compare_result_format">來源商品: %1$s\n查詢天數: %2$s\n資料筆數: --\n狀態: 尚未接入價格抓取</string>
+
+    <string name="price_compare_chart_label">走勢圖</string>
+    <string name="price_compare_chart_placeholder">圖表區（待接入價格曲線）</string>
+
+    <string name="price_compare_stats_label">價格統計</string>
+    <string name="price_compare_stat_latest_label">最新價格</string>
+    <string name="price_compare_stat_lowest_label">最低價格</string>
+    <string name="price_compare_stat_highest_label">最高價格</string>
+    <string name="price_compare_stat_average_label">平均價格</string>
+    <string name="price_compare_stat_median_label">中位數價格</string>
+    <string name="price_compare_stat_latest_lowest_gap_label">最新-最低價差</string>
+    <string name="price_compare_stat_latest_lowest_delta_label">最新與最低間隔</string>
+    <string name="price_compare_stat_placeholder">--</string>
+
+    <string name="price_compare_recent_label">最近連結</string>
+    <string name="price_compare_use_selected">帶入選取連結</string>
+    <string name="price_compare_remove_selected">移除選取</string>
+    <string name="price_compare_refresh">重新整理</string>
+
+    <string name="price_compare_clipboard_empty">剪貼簿沒有可用連結</string>
+    <string name="price_compare_no_selection">尚未選取連結</string>
+
+    <string-array name="price_compare_ranges">
+        <item>最近5年</item>
+        <item>最近3年</item>
+        <item>最近1年</item>
+        <item>最近半年</item>
+        <item>最近3個月</item>
+        <item>最近1個月</item>
+    </string-array>
+</resources>
