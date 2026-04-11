@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.View;
 import android.widget.TextView;
@@ -25,12 +27,24 @@ import androidx.work.WorkManager;
 
 import java.util.Calendar;
 import java.util.Locale;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "subscription_expiry_channel";
     private static final int REQUEST_POST_NOTIFICATIONS = 1001;
+    private static final String SLEEP_PREFS = "sleep_hint_prefs";
+    private static final String SLEEP_PREF_DATE = "sleep_hint_date";
+    private static final String SLEEP_PREF_COUNT = "sleep_hint_count";
+    private static final int[] SLEEP_HINT_MINUTES = new int[]{
+            0, 30, 60, 90, 120, 135, 150, 165, 180, 195, 210, 225, 240
+    };
+
+    private final Handler sleepHandler = new Handler(Looper.getMainLooper());
+    private Runnable sleepRunnable;
+    private View cardSleepHint;
+    private TextView textSleepHint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +84,8 @@ public class MainActivity extends AppCompatActivity {
         View cardFengNotes = findViewById(R.id.cardFengNotes);
         View cardFengCommon = findViewById(R.id.cardFengCommon);
         View cardLotteryReason = findViewById(R.id.cardLotteryReason);
+        cardSleepHint = findViewById(R.id.cardSleepHint);
+        textSleepHint = findViewById(R.id.textSleepHint);
         View birthdayEasterEgg = findViewById(R.id.cardBirthdayEasterEgg);
         TextView textBirthdayTitle = findViewById(R.id.textBirthdayTitle);
         TextView textBirthdaySubtitle = findViewById(R.id.textBirthdaySubtitle);
@@ -102,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LotteryReasonActivity.class)));
 
         setupBirthdayEasterEgg(birthdayEasterEgg, textBirthdayTitle, textBirthdaySubtitle);
+        startSleepHintScheduler();
 
         OilPriceScheduler.enqueueImmediateFetch(getApplicationContext());
         OilPriceScheduler.scheduleDailyFetch(getApplicationContext());
@@ -109,6 +126,107 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         ensureNotificationPermission();
         scheduleDailySubscriptionCheck();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopSleepHintScheduler();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startSleepHintScheduler();
+    }
+
+    private void startSleepHintScheduler() {
+        if (cardSleepHint == null || textSleepHint == null) {
+            return;
+        }
+        stopSleepHintScheduler();
+        ensureSleepHintDate();
+        scheduleNextSleepHint(true);
+    }
+
+    private void stopSleepHintScheduler() {
+        if (sleepRunnable != null) {
+            sleepHandler.removeCallbacks(sleepRunnable);
+        }
+    }
+
+    private void scheduleNextSleepHint(boolean allowImmediate) {
+        Calendar now = Calendar.getInstance();
+        int minuteOfDay = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE);
+
+        int nextSlot = findNextSleepSlot(minuteOfDay);
+        if (nextSlot < 0) {
+            cardSleepHint.setVisibility(View.GONE);
+            return;
+        }
+
+        cardSleepHint.setVisibility(View.VISIBLE);
+        long triggerAt = computeSlotTime(now, nextSlot);
+        long nowMillis = System.currentTimeMillis();
+        long delay = triggerAt - nowMillis;
+        if (delay < 0 && allowImmediate) {
+            delay = 0;
+        }
+        if (delay < 0) {
+            delay = 0;
+        }
+
+        sleepRunnable = () -> {
+            showSleepHint();
+            scheduleNextSleepHint(false);
+        };
+        sleepHandler.postDelayed(sleepRunnable, delay);
+    }
+
+    private int findNextSleepSlot(int minuteOfDay) {
+        for (int slot : SLEEP_HINT_MINUTES) {
+            if (minuteOfDay <= slot) {
+                return slot;
+            }
+        }
+        return -1;
+    }
+
+    private long computeSlotTime(Calendar base, int minuteOfDay) {
+        Calendar slot = (Calendar) base.clone();
+        slot.set(Calendar.HOUR_OF_DAY, minuteOfDay / 60);
+        slot.set(Calendar.MINUTE, minuteOfDay % 60);
+        slot.set(Calendar.SECOND, 0);
+        slot.set(Calendar.MILLISECOND, 0);
+        return slot.getTimeInMillis();
+    }
+
+    private void ensureSleepHintDate() {
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                .format(new java.util.Date());
+        String savedDate = getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
+                .getString(SLEEP_PREF_DATE, "");
+        if (!today.equals(savedDate)) {
+            getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
+                    .edit()
+                    .putString(SLEEP_PREF_DATE, today)
+                    .putInt(SLEEP_PREF_COUNT, 0)
+                    .apply();
+        }
+    }
+
+    private void showSleepHint() {
+        ensureSleepHintDate();
+        int count = getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
+                .getInt(SLEEP_PREF_COUNT, 0) + 1;
+        getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
+                .edit()
+                .putInt(SLEEP_PREF_COUNT, count)
+                .apply();
+
+        String nowText = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+                .format(new java.util.Date());
+        textSleepHint.setText(nowText + " 提示第 " + count + " 次");
     }
 
     private void createNotificationChannel() {
