@@ -36,6 +36,7 @@ public class AppwriteHelper {
     private static final String APPWRITE_COMMON_ACCOUNT_COLLECTION_ID = "698217e40016df4e7ca9";
     private static final String PREFS_COLLECTION_CACHE = "appwrite_collection_cache";
     private static final String PREFS_SUBSCRIPTION_COLLECTION_ID = "subscription_collection_id";
+    private static final String PREFS_FOOD_COLLECTION_ID = "food_collection_id";
 
     private static AppwriteHelper instance;
 
@@ -380,7 +381,30 @@ public class AppwriteHelper {
     }
 
     private List<FoodItem> fetchFoods() throws Exception {
-        return fetchData(APPWRITE_FOOD_COLLECTION_ID, this::parseFoods);
+        String cached = getCachedFoodCollectionId();
+        if (cached != null && !cached.isEmpty()) {
+            try {
+                return fetchData(cached, this::parseFoods);
+            } catch (Exception e) {
+                if (!isCollectionNotFound(e)) {
+                    throw e;
+                }
+                clearCachedFoodCollectionId();
+            }
+        }
+
+        try {
+            return fetchData(APPWRITE_FOOD_COLLECTION_ID, this::parseFoods);
+        } catch (Exception e) {
+            if (!isCollectionNotFound(e)) {
+                throw e;
+            }
+            String resolved = resolveFoodCollectionId();
+            if (!APPWRITE_FOOD_COLLECTION_ID.equals(resolved)) {
+                return fetchData(resolved, this::parseFoods);
+            }
+            throw e;
+        }
     }
 
     private List<CommonAccountItem> fetchCommonAccounts() throws Exception {
@@ -447,6 +471,28 @@ public class AppwriteHelper {
         return resolved;
     }
 
+    private String resolveFoodCollectionId() throws Exception {
+        String cached = getCachedFoodCollectionId();
+        if (cached != null && !cached.isEmpty()) {
+            return cached;
+        }
+
+        List<CollectionInfo> collections = listCollections();
+        String resolved = null;
+        for (CollectionInfo info : collections) {
+            String name = info.name != null ? info.name.toLowerCase(Locale.getDefault()) : "";
+            if (name.contains("food") || name.contains("foods") || name.contains("食物")) {
+                resolved = info.id;
+                break;
+            }
+        }
+        if (resolved == null) {
+            resolved = APPWRITE_FOOD_COLLECTION_ID;
+        }
+        cacheFoodCollectionId(resolved);
+        return resolved;
+    }
+
     private List<CollectionInfo> listCollections() throws Exception {
         List<CollectionInfo> results = new ArrayList<>();
         int offset = 0;
@@ -499,6 +545,25 @@ public class AppwriteHelper {
         context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
                 .edit()
                 .remove(PREFS_SUBSCRIPTION_COLLECTION_ID)
+                .apply();
+    }
+
+    private String getCachedFoodCollectionId() {
+        return context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
+                .getString(PREFS_FOOD_COLLECTION_ID, "");
+    }
+
+    private void cacheFoodCollectionId(String id) {
+        context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
+                .edit()
+                .putString(PREFS_FOOD_COLLECTION_ID, id)
+                .apply();
+    }
+
+    private void clearCachedFoodCollectionId() {
+        context.getSharedPreferences(PREFS_COLLECTION_CACHE, Context.MODE_PRIVATE)
+                .edit()
+                .remove(PREFS_FOOD_COLLECTION_ID)
                 .apply();
     }
 
