@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, BatteryStatusActivity.class));
                 return true;
             }
-            if (item.getItemId() == R.id.action_price_compare) {
-                startActivity(new Intent(MainActivity.this, PriceCompareActivity.class));
+            if (item.getItemId() == R.id.action_feng_tools) {
+                startActivity(new Intent(MainActivity.this, FengToolsActivity.class));
                 return true;
             }
             return false;
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, USDebtActivity.class)));
 
         cardPriceCompare.setOnClickListener(v ->
-                startActivity(new Intent(MainActivity.this, PriceCompareActivity.class)));
+                startActivity(new Intent(MainActivity.this, FengToolsActivity.class)));
 
         cardBatteryStatus.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, BatteryStatusActivity.class)));

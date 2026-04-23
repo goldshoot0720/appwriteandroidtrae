@@ -80,6 +80,18 @@
             android:parentActivityName=".MainActivity" />
 
         <activity
+            android:name=".PhoneCompareActivity"
+            android:exported="false"
+            android:label="@string/feature_phone_compare"
+            android:parentActivityName=".FengToolsActivity" />
+
+        <activity
+            android:name=".FengToolsActivity"
+            android:exported="false"
+            android:label="@string/feature_feng_tools"
+            android:parentActivityName=".MainActivity" />
+
+        <activity
             android:name=".BatteryStatusActivity"
             android:exported="false"
             android:label="@string/feature_battery_status"

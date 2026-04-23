@@ -14,7 +14,7 @@
         android:title="@string/feature_battery_status"
         app:showAsAction="never" />
     <item
-        android:id="@+id/action_price_compare"
-        android:title="@string/menu_price_compare"
+        android:id="@+id/action_feng_tools"
+        android:title="@string/feature_feng_tools"
         app:showAsAction="never" />
 </menu>
