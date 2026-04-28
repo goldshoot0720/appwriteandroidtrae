@@ -53,8 +53,8 @@
     <string name="phone_compare_status_error">手機比價失敗: %1$s</string>
     <string name="phone_compare_results_label">比價結果</string>
     <string name="phone_compare_empty">尚無資料，請輸入關鍵字後開始比價。</string>
-    <string name="sleep_hint_label">睡眠提示</string>
-    <string name="sleep_hint_placeholder">00:00-04:00 期間會顯示提示次數</string>
+    <string name="sleep_hint_label">睡眠警告</string>
+    <string name="sleep_hint_placeholder">請入睡</string>
     <string name="code_line_count_placeholder">程式碼行數</string>
     <string name="code_line_count_label">程式碼行數: %1$d</string>
 

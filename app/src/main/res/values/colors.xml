@@ -19,6 +19,10 @@
     <color name="accent_gold">#FFC6A36A</color>
     <color name="accent_coral">#FFD88876</color>
     <color name="accent_lilac">#FFA491C0</color>
+    <color name="sleep_warning_yellow_bg">#FFFFF4C2</color>
+    <color name="sleep_warning_yellow_text">#FF7A4F00</color>
+    <color name="sleep_warning_red_bg">#FFFFD7D7</color>
+    <color name="sleep_warning_red_text">#FF9F1D1D</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="purple_500">#FF517264</color>

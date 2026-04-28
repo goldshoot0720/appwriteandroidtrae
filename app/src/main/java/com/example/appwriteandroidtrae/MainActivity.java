@@ -25,25 +25,21 @@ import androidx.work.ExistingPeriodicWorkPolicy;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.util.Calendar;
 import java.util.Locale;
-import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "subscription_expiry_channel";
     private static final int REQUEST_POST_NOTIFICATIONS = 1001;
-    private static final String SLEEP_PREFS = "sleep_hint_prefs";
-    private static final String SLEEP_PREF_DATE = "sleep_hint_date";
-    private static final String SLEEP_PREF_COUNT = "sleep_hint_count";
-    private static final int[] SLEEP_HINT_MINUTES = new int[]{
-            0, 30, 60, 90, 120, 135, 150, 165, 180, 195, 210, 225, 240
-    };
 
     private final Handler sleepHandler = new Handler(Looper.getMainLooper());
     private Runnable sleepRunnable;
-    private View cardSleepHint;
+    private MaterialCardView cardSleepHint;
+    private TextView textSleepHintLabel;
     private TextView textSleepHint;
     private TextView textCodeLineCount;
     private static final int CODE_LINE_COUNT = 6076;
@@ -92,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         View cardFengCommon = findViewById(R.id.cardFengCommon);
         View cardLotteryReason = findViewById(R.id.cardLotteryReason);
         cardSleepHint = findViewById(R.id.cardSleepHint);
+        textSleepHintLabel = findViewById(R.id.textSleepHintLabel);
         textSleepHint = findViewById(R.id.textSleepHint);
         textCodeLineCount = findViewById(R.id.textCodeLineCount);
         View birthdayEasterEgg = findViewById(R.id.cardBirthdayEasterEgg);
@@ -155,12 +152,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startSleepHintScheduler() {
-        if (cardSleepHint == null || textSleepHint == null) {
+        if (cardSleepHint == null || textSleepHintLabel == null || textSleepHint == null) {
             return;
         }
         stopSleepHintScheduler();
-        ensureSleepHintDate();
-        scheduleNextSleepHint(true);
+        updateSleepWarning();
     }
 
     private void stopSleepHintScheduler() {
@@ -169,78 +165,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void scheduleNextSleepHint(boolean allowImmediate) {
+    private void updateSleepWarning() {
         Calendar now = Calendar.getInstance();
-        int minuteOfDay = now.get(Calendar.HOUR_OF_DAY) * 60 + now.get(Calendar.MINUTE);
+        int hour = now.get(Calendar.HOUR_OF_DAY);
 
-        int nextSlot = findNextSleepSlot(minuteOfDay);
-        if (nextSlot < 0) {
+        if (hour >= 0 && hour <= 2) {
+            showSleepWarning(
+                    R.color.sleep_warning_yellow_bg,
+                    R.color.sleep_warning_yellow_text
+            );
+        } else if (hour >= 3 && hour <= 6) {
+            showSleepWarning(
+                    R.color.sleep_warning_red_bg,
+                    R.color.sleep_warning_red_text
+            );
+        } else {
             cardSleepHint.setVisibility(View.GONE);
-            return;
         }
 
+        sleepRunnable = this::updateSleepWarning;
+        sleepHandler.postDelayed(sleepRunnable, nextMinuteDelay(now));
+    }
+
+    private void showSleepWarning(int backgroundColorRes, int textColorRes) {
+        int backgroundColor = ContextCompat.getColor(this, backgroundColorRes);
+        int textColor = ContextCompat.getColor(this, textColorRes);
         cardSleepHint.setVisibility(View.VISIBLE);
-        long triggerAt = computeSlotTime(now, nextSlot);
-        long nowMillis = System.currentTimeMillis();
-        long delay = triggerAt - nowMillis;
-        if (delay < 0 && allowImmediate) {
-            delay = 0;
-        }
-        if (delay < 0) {
-            delay = 0;
-        }
-
-        sleepRunnable = () -> {
-            showSleepHint();
-            scheduleNextSleepHint(false);
-        };
-        sleepHandler.postDelayed(sleepRunnable, delay);
+        cardSleepHint.setCardBackgroundColor(backgroundColor);
+        textSleepHintLabel.setTextColor(textColor);
+        textSleepHint.setTextColor(textColor);
+        textSleepHint.setText(R.string.sleep_hint_placeholder);
     }
 
-    private int findNextSleepSlot(int minuteOfDay) {
-        for (int slot : SLEEP_HINT_MINUTES) {
-            if (minuteOfDay <= slot) {
-                return slot;
-            }
-        }
-        return -1;
-    }
-
-    private long computeSlotTime(Calendar base, int minuteOfDay) {
-        Calendar slot = (Calendar) base.clone();
-        slot.set(Calendar.HOUR_OF_DAY, minuteOfDay / 60);
-        slot.set(Calendar.MINUTE, minuteOfDay % 60);
-        slot.set(Calendar.SECOND, 0);
-        slot.set(Calendar.MILLISECOND, 0);
-        return slot.getTimeInMillis();
-    }
-
-    private void ensureSleepHintDate() {
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                .format(new java.util.Date());
-        String savedDate = getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
-                .getString(SLEEP_PREF_DATE, "");
-        if (!today.equals(savedDate)) {
-            getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
-                    .edit()
-                    .putString(SLEEP_PREF_DATE, today)
-                    .putInt(SLEEP_PREF_COUNT, 0)
-                    .apply();
-        }
-    }
-
-    private void showSleepHint() {
-        ensureSleepHintDate();
-        int count = getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
-                .getInt(SLEEP_PREF_COUNT, 0) + 1;
-        getSharedPreferences(SLEEP_PREFS, MODE_PRIVATE)
-                .edit()
-                .putInt(SLEEP_PREF_COUNT, count)
-                .apply();
-
-        String nowText = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-                .format(new java.util.Date());
-        textSleepHint.setText(nowText + " 提示第 " + count + " 次");
+    private long nextMinuteDelay(Calendar now) {
+        Calendar nextMinute = (Calendar) now.clone();
+        nextMinute.add(Calendar.MINUTE, 1);
+        nextMinute.set(Calendar.SECOND, 0);
+        nextMinute.set(Calendar.MILLISECOND, 0);
+        return Math.max(1000L, nextMinute.getTimeInMillis() - System.currentTimeMillis());
     }
 
     private void createNotificationChannel() {
