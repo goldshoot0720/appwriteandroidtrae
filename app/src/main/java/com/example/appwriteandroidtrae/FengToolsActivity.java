@@ -25,11 +25,17 @@ public class FengToolsActivity extends AppCompatActivity {
 
         View cardFengPriceCompare = findViewById(R.id.cardFengPriceCompare);
         View cardPhoneCompare = findViewById(R.id.cardPhoneCompare);
+        View cardFengTube = findViewById(R.id.cardFengTube);
+        View cardFengFinance = findViewById(R.id.cardFengFinance);
 
         cardFengPriceCompare.setOnClickListener(v ->
                 startActivity(new Intent(FengToolsActivity.this, PriceCompareActivity.class)));
         cardPhoneCompare.setOnClickListener(v ->
                 startActivity(new Intent(FengToolsActivity.this, PhoneCompareActivity.class)));
+        cardFengTube.setOnClickListener(v ->
+                startActivity(new Intent(FengToolsActivity.this, FengTubeActivity.class)));
+        cardFengFinance.setOnClickListener(v ->
+                startActivity(new Intent(FengToolsActivity.this, FengFinanceActivity.class)));
     }
 
     @Override

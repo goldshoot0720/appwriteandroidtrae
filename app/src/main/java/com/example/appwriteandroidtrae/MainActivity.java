@@ -39,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private final Handler sleepHandler = new Handler(Looper.getMainLooper());
     private Runnable sleepRunnable;
     private MaterialCardView cardSleepHint;
+    private View cardFengTubeAlert;
     private TextView textSleepHintLabel;
     private TextView textSleepHint;
+    private TextView textFengTubeAlertDesc;
     private TextView textCodeLineCount;
     private VoiceInputHelper voiceInputHelper;
     private static final int CODE_LINE_COUNT = 6076;
@@ -94,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
         View cardFengCommon = findViewById(R.id.cardFengCommon);
         View cardLotteryReason = findViewById(R.id.cardLotteryReason);
         cardSleepHint = findViewById(R.id.cardSleepHint);
+        cardFengTubeAlert = findViewById(R.id.cardFengTubeAlert);
         textSleepHintLabel = findViewById(R.id.textSleepHintLabel);
         textSleepHint = findViewById(R.id.textSleepHint);
+        textFengTubeAlertDesc = findViewById(R.id.textFengTubeAlertDesc);
         textCodeLineCount = findViewById(R.id.textCodeLineCount);
         View birthdayEasterEgg = findViewById(R.id.cardBirthdayEasterEgg);
         TextView textBirthdayTitle = findViewById(R.id.textBirthdayTitle);
@@ -131,7 +135,11 @@ public class MainActivity extends AppCompatActivity {
         cardLotteryReason.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, LotteryReasonActivity.class)));
 
+        cardFengTubeAlert.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, FengTubeActivity.class)));
+
         setupBirthdayEasterEgg(birthdayEasterEgg, textBirthdayTitle, textBirthdaySubtitle);
+        checkFengTubeUpdates();
         startSleepHintScheduler();
         if (textCodeLineCount != null) {
             textCodeLineCount.setText(getString(R.string.code_line_count_label, CODE_LINE_COUNT));
@@ -223,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, FengCommonActivity.class));
         } else if (containsAny(normalized, "銀行", "存款", "bank")) {
             startActivity(new Intent(this, BankStatsActivity.class));
+        } else if (containsAny(normalized, "鋒兄tube", "鋒兄Tube", "youtube", "tube", "影片追蹤")) {
+            startActivity(new Intent(this, FengTubeActivity.class));
         } else if (containsAny(normalized, "手機比價", "手機", "phone")) {
             startActivity(new Intent(this, PhoneCompareActivity.class));
         } else if (containsAny(normalized, "鋒兄比價", "商品比價", "比價", "price")) {
@@ -277,6 +287,34 @@ public class MainActivity extends AppCompatActivity {
                 getString(R.string.voice_unsupported_module, module),
                 android.widget.Toast.LENGTH_LONG
         ).show();
+    }
+
+    private void checkFengTubeUpdates() {
+        if (cardFengTubeAlert == null || textFengTubeAlertDesc == null) {
+            return;
+        }
+        cardFengTubeAlert.setVisibility(View.GONE);
+        FengTubeRepository.fetchLatest(new FengTubeRepository.Callback() {
+            @Override
+            public void onSuccess(FengTubeRepository.FengTubeResult result) {
+                runOnUiThread(() -> {
+                    if (result.freshCount > 0) {
+                        textFengTubeAlertDesc.setText(getString(
+                                R.string.feng_tube_home_alert_desc,
+                                result.freshCount
+                        ));
+                        cardFengTubeAlert.setVisibility(View.VISIBLE);
+                    } else {
+                        cardFengTubeAlert.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception error) {
+                runOnUiThread(() -> cardFengTubeAlert.setVisibility(View.GONE));
+            }
+        });
     }
 
     private void createNotificationChannel() {
