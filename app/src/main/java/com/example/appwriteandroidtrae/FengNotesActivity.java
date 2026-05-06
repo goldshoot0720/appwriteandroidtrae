@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class FengNotesActivity extends AppCompatActivity {
     private ListView listView;
     private TextView textViewError;
     private TextInputEditText editTextSearchNotes;
+    private VoiceInputHelper voiceInputHelper;
     private ArticleAdapter adapter;
     private final List<AppwriteHelper.ArticleItem> allArticles = new ArrayList<>();
     private final List<AppwriteHelper.ArticleItem> filteredArticles = new ArrayList<>();
@@ -52,6 +54,13 @@ public class FengNotesActivity extends AppCompatActivity {
         listView = findViewById(R.id.listViewArticles);
         textViewError = findViewById(R.id.textViewError);
         editTextSearchNotes = findViewById(R.id.editTextSearchNotes);
+        TextInputLayout inputLayoutSearchNotes = findViewById(R.id.inputLayoutSearchNotes);
+        voiceInputHelper = new VoiceInputHelper(this);
+        voiceInputHelper.bindTextInput(
+                inputLayoutSearchNotes,
+                editTextSearchNotes,
+                R.string.voice_prompt_notes
+        );
 
         adapter = new ArticleAdapter(this, filteredArticles);
         listView.setAdapter(adapter);

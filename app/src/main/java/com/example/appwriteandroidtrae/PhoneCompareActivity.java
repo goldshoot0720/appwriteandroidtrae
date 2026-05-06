@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,6 +45,7 @@ public class PhoneCompareActivity extends AppCompatActivity {
     private final List<PhoneDeal> deals = new ArrayList<>();
     private ArrayAdapter<String> adapter;
     private EditText editQuery;
+    private VoiceInputHelper voiceInputHelper;
     private TextView textStatus;
     private Button buttonSearch;
     private Button buttonRefresh;
@@ -62,6 +65,13 @@ public class PhoneCompareActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         editQuery = findViewById(R.id.editTextQuery);
+        TextInputLayout inputLayoutPhoneQuery = findViewById(R.id.inputLayoutPhoneQuery);
+        voiceInputHelper = new VoiceInputHelper(this);
+        voiceInputHelper.bindTextInput(
+                inputLayoutPhoneQuery,
+                editQuery,
+                R.string.voice_prompt_phone_compare
+        );
         textStatus = findViewById(R.id.textStatus);
         buttonSearch = findViewById(R.id.buttonSearch);
         buttonRefresh = findViewById(R.id.buttonRefresh);

@@ -1,6 +1,8 @@
 package com.example.appwriteandroidtrae;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,16 +14,23 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FengCommonActivity extends AppCompatActivity {
 
     private ProgressBar progressBar;
     private ListView listView;
     private TextView textViewError;
+    private TextInputEditText editTextSearchCommon;
+    private VoiceInputHelper voiceInputHelper;
     private CommonListAdapter adapter;
-    private final List<AppwriteHelper.CommonAccountItem> items = new ArrayList<>();
+    private final List<AppwriteHelper.CommonAccountItem> allItems = new ArrayList<>();
+    private final List<AppwriteHelper.CommonAccountItem> filteredItems = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +49,31 @@ public class FengCommonActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.listViewCommon);
         textViewError = findViewById(R.id.textViewError);
+        editTextSearchCommon = findViewById(R.id.editTextSearchCommon);
+        TextInputLayout inputLayoutSearchCommon = findViewById(R.id.inputLayoutSearchCommon);
+        voiceInputHelper = new VoiceInputHelper(this);
+        voiceInputHelper.bindTextInput(
+                inputLayoutSearchCommon,
+                editTextSearchCommon,
+                R.string.voice_prompt_common
+        );
 
-        adapter = new CommonListAdapter(items);
+        adapter = new CommonListAdapter(filteredItems);
         listView.setAdapter(adapter);
+        editTextSearchCommon.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filterCommon(s != null ? s.toString() : "");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
 
         loadData();
     }
@@ -63,11 +94,13 @@ public class FengCommonActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(List<AppwriteHelper.CommonAccountItem> result) {
                         runOnUiThread(() -> {
-                            items.clear();
-                            items.addAll(result);
+                            allItems.clear();
+                            allItems.addAll(result);
                             progressBar.setVisibility(View.GONE);
                             listView.setVisibility(View.VISIBLE);
-                            adapter.notifyDataSetChanged();
+                            filterCommon(editTextSearchCommon.getText() != null
+                                    ? editTextSearchCommon.getText().toString()
+                                    : "");
                         });
                     }
 
@@ -82,6 +115,34 @@ public class FengCommonActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         textViewError.setVisibility(View.VISIBLE);
         textViewError.setText(message);
+    }
+
+    private void filterCommon(String query) {
+        String normalizedQuery = query.trim().toLowerCase(Locale.getDefault());
+        filteredItems.clear();
+
+        if (normalizedQuery.isEmpty()) {
+            filteredItems.addAll(allItems);
+        } else {
+            for (AppwriteHelper.CommonAccountItem item : allItems) {
+                String name = safeLower(item.name);
+                String note = safeLower(item.note);
+                String ref = safeLower(item.ref);
+                String category = safeLower(item.category);
+                if (name.contains(normalizedQuery)
+                        || note.contains(normalizedQuery)
+                        || ref.contains(normalizedQuery)
+                        || category.contains(normalizedQuery)) {
+                    filteredItems.add(item);
+                }
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    private String safeLower(String value) {
+        return value != null ? value.toLowerCase(Locale.getDefault()) : "";
     }
 
     private class CommonListAdapter extends ArrayAdapter<AppwriteHelper.CommonAccountItem> {

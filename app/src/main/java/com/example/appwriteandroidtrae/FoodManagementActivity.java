@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class FoodManagementActivity extends AppCompatActivity {
     private ListView listView;
     private TextView textViewError;
     private TextInputEditText editTextSearchFoods;
+    private VoiceInputHelper voiceInputHelper;
     private FoodAdapter adapter;
     private final List<AppwriteHelper.FoodItem> allFoods = new ArrayList<>();
     private final List<AppwriteHelper.FoodItem> filteredFoods = new ArrayList<>();
@@ -51,6 +53,13 @@ public class FoodManagementActivity extends AppCompatActivity {
         listView = findViewById(R.id.listViewFoods);
         textViewError = findViewById(R.id.textViewError);
         editTextSearchFoods = findViewById(R.id.editTextSearchFoods);
+        TextInputLayout inputLayoutSearchFoods = findViewById(R.id.inputLayoutSearchFoods);
+        voiceInputHelper = new VoiceInputHelper(this);
+        voiceInputHelper.bindTextInput(
+                inputLayoutSearchFoods,
+                editTextSearchFoods,
+                R.string.voice_prompt_food
+        );
 
         adapter = new FoodAdapter(this, filteredFoods);
         listView.setAdapter(adapter);

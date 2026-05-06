@@ -57,6 +57,23 @@
     <string name="sleep_hint_placeholder">請入睡</string>
     <string name="code_line_count_placeholder">程式碼行數</string>
     <string name="code_line_count_label">程式碼行數: %1$d</string>
+    <string name="voice_input">語音輸入</string>
+    <string name="voice_home">首頁語音</string>
+    <string name="voice_confirm_title">確認語音內容</string>
+    <string name="voice_confirm_apply">套用</string>
+    <string name="voice_confirm_retry">重講</string>
+    <string name="voice_no_result">沒有辨識到語音內容</string>
+    <string name="voice_not_available">這台裝置沒有可用的語音辨識服務</string>
+    <string name="voice_prompt_home">請說出要前往的功能，例如訂閱、食品、筆記、常用、銀行、工具、手機比價。</string>
+    <string name="voice_prompt_subscription">請說出訂閱搜尋關鍵字</string>
+    <string name="voice_prompt_food">請說出食品搜尋關鍵字</string>
+    <string name="voice_prompt_notes">請說出筆記搜尋關鍵字</string>
+    <string name="voice_prompt_common">請說出常用資料搜尋關鍵字</string>
+    <string name="voice_prompt_bank">請說出銀行搜尋關鍵字</string>
+    <string name="voice_prompt_price_compare">請說出商品連結或商品名稱</string>
+    <string name="voice_prompt_phone_compare">請說出手機品牌、型號或容量</string>
+    <string name="voice_unsupported_module">Android 版目前尚未提供「%1$s」模組</string>
+    <string name="voice_unknown_home_command">聽到了「%1$s」，但找不到對應功能</string>
 
     <string name="menu_bank_stats">銀行統計</string>
     <string name="notification_channel_name">訂閱通知</string>
@@ -82,8 +99,10 @@
     <string name="notes_search_hint">搜尋標題或內容</string>
     <string name="screen_common_eyebrow">Common</string>
     <string name="screen_common_subtitle">列出常用帳號與備註。</string>
+    <string name="common_search_hint">搜尋名稱、備註或分類</string>
     <string name="screen_battery_eyebrow">Battery</string>
     <string name="screen_battery_subtitle">整理最近一次充滿電與目前電量狀態。</string>
+    <string name="bank_search_hint">搜尋銀行、帳號、卡片或地址</string>
 
     <string name="subscription_alert_title">訂閱到期提醒</string>
     <string name="subscription_alert_item">%1$s - %2$s (%3$s %4$s)

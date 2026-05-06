@@ -18,6 +18,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,7 @@ public class PriceCompareActivity extends AppCompatActivity {
     private static final int MAX_RECENT = 8;
 
     private EditText editUrl;
+    private VoiceInputHelper voiceInputHelper;
     private Spinner spinnerRange;
     private TextView textStatus;
     private TextView textResult;
@@ -60,6 +63,13 @@ public class PriceCompareActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         editUrl = findViewById(R.id.editTextProductUrl);
+        TextInputLayout inputLayoutProductUrl = findViewById(R.id.inputLayoutProductUrl);
+        voiceInputHelper = new VoiceInputHelper(this);
+        voiceInputHelper.bindTextInput(
+                inputLayoutProductUrl,
+                editUrl,
+                R.string.voice_prompt_price_compare
+        );
         spinnerRange = findViewById(R.id.spinnerRange);
         textStatus = findViewById(R.id.textStatus);
         textResult = findViewById(R.id.textResult);

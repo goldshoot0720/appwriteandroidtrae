@@ -23,6 +23,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     private ListView listView;
     private TextView textViewError;
     private TextInputEditText editTextSearchSubscriptions;
+    private VoiceInputHelper voiceInputHelper;
     private ArrayAdapter<AppwriteHelper.SubscriptionItem> adapter;
     private final List<AppwriteHelper.SubscriptionItem> allSubscriptionItems = new ArrayList<>();
     private final List<AppwriteHelper.SubscriptionItem> filteredSubscriptionItems = new ArrayList<>();
@@ -62,6 +64,13 @@ public class SubscriptionActivity extends AppCompatActivity {
         listView = findViewById(R.id.listViewSubscriptions);
         textViewError = findViewById(R.id.textViewError);
         editTextSearchSubscriptions = findViewById(R.id.editTextSearchSubscriptions);
+        TextInputLayout inputLayoutSearchSubscriptions = findViewById(R.id.inputLayoutSearchSubscriptions);
+        voiceInputHelper = new VoiceInputHelper(this);
+        voiceInputHelper.bindTextInput(
+                inputLayoutSearchSubscriptions,
+                editTextSearchSubscriptions,
+                R.string.voice_prompt_subscription
+        );
 
         adapter = new SubscriptionAdapter(this, filteredSubscriptionItems);
         listView.setAdapter(adapter);

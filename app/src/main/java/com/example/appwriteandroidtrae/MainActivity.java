@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView textSleepHintLabel;
     private TextView textSleepHint;
     private TextView textCodeLineCount;
+    private VoiceInputHelper voiceInputHelper;
     private static final int CODE_LINE_COUNT = 6076;
 
     @Override
@@ -57,7 +58,12 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        voiceInputHelper = new VoiceInputHelper(this);
         toolbar.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_voice_home) {
+                voiceInputHelper.start(getString(R.string.voice_prompt_home), this::handleHomeVoiceCommand);
+                return true;
+            }
             if (item.getItemId() == R.id.action_bank_stats) {
                 startActivity(new Intent(MainActivity.this, BankStatsActivity.class));
                 return true;
@@ -203,6 +209,74 @@ public class MainActivity extends AppCompatActivity {
         nextMinute.set(Calendar.SECOND, 0);
         nextMinute.set(Calendar.MILLISECOND, 0);
         return Math.max(1000L, nextMinute.getTimeInMillis() - System.currentTimeMillis());
+    }
+
+    private void handleHomeVoiceCommand(String command) {
+        String normalized = normalizeVoiceCommand(command);
+        if (containsAny(normalized, "訂閱", "到期", "subscription")) {
+            startActivity(new Intent(this, SubscriptionActivity.class));
+        } else if (containsAny(normalized, "食品", "食物", "food")) {
+            startActivity(new Intent(this, FoodManagementActivity.class));
+        } else if (containsAny(normalized, "筆記", "文章", "notes", "note")) {
+            startActivity(new Intent(this, FengNotesActivity.class));
+        } else if (containsAny(normalized, "常用", "帳號", "common")) {
+            startActivity(new Intent(this, FengCommonActivity.class));
+        } else if (containsAny(normalized, "銀行", "存款", "bank")) {
+            startActivity(new Intent(this, BankStatsActivity.class));
+        } else if (containsAny(normalized, "手機比價", "手機", "phone")) {
+            startActivity(new Intent(this, PhoneCompareActivity.class));
+        } else if (containsAny(normalized, "鋒兄比價", "商品比價", "比價", "price")) {
+            startActivity(new Intent(this, PriceCompareActivity.class));
+        } else if (containsAny(normalized, "工具", "鋒兄工具", "tool")) {
+            startActivity(new Intent(this, FengToolsActivity.class));
+        } else if (containsAny(normalized, "油價", "油", "oil")) {
+            startActivity(new Intent(this, OilMonitorActivity.class));
+        } else if (containsAny(normalized, "美債", "國債", "usdebt", "debt")) {
+            startActivity(new Intent(this, USDebtActivity.class));
+        } else if (containsAny(normalized, "電池", "battery")) {
+            startActivity(new Intent(this, BatteryStatusActivity.class));
+        } else if (containsAny(normalized, "彩券", "結婚理由", "樂透", "lottery")) {
+            startActivity(new Intent(this, LotteryReasonActivity.class));
+        } else if (containsAny(normalized, "圖片", "影片", "音樂", "文件", "播客", "例行", "設定", "關於")) {
+            showUnsupportedVoiceModule(command);
+        } else {
+            android.widget.Toast.makeText(
+                    this,
+                    getString(R.string.voice_unknown_home_command, command),
+                    android.widget.Toast.LENGTH_LONG
+            ).show();
+        }
+    }
+
+    private String normalizeVoiceCommand(String value) {
+        return value == null
+                ? ""
+                : value.toLowerCase(Locale.TAIWAN).replaceAll("\\s+", "");
+    }
+
+    private boolean containsAny(String value, String... keywords) {
+        for (String keyword : keywords) {
+            if (value.contains(keyword.toLowerCase(Locale.TAIWAN).replaceAll("\\s+", ""))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void showUnsupportedVoiceModule(String command) {
+        String module = command != null ? command : "";
+        String[] modules = {"圖片", "影片", "音樂", "文件", "播客", "例行", "設定", "關於"};
+        for (String candidate : modules) {
+            if (command != null && command.contains(candidate)) {
+                module = candidate;
+                break;
+            }
+        }
+        android.widget.Toast.makeText(
+                this,
+                getString(R.string.voice_unsupported_module, module),
+                android.widget.Toast.LENGTH_LONG
+        ).show();
     }
 
     private void createNotificationChannel() {
