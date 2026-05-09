@@ -55,6 +55,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textEyebrow" />
 
+    <TextView
+        android:id="@+id/textCategoryNote"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/bank_category_note"
+        android:textColor="@color/sage_700"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/inputLayoutSearchBanks"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -72,7 +86,7 @@
         app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textSubtitleHeader">
+        app:layout_constraintTop_toBottomOf="@id/textCategoryNote">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextSearchBanks"
@@ -135,6 +149,24 @@
                 android:textColor="@color/slate_950"
                 android:textSize="30sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textBankAccountCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/bank_account_total_placeholder"
+                android:textColor="@color/slate_700"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/textTicketCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/bank_ticket_total_placeholder"
+                android:textColor="@color/slate_700"
+                android:textSize="14sp" />
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>

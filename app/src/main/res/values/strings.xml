@@ -32,7 +32,7 @@
     <string name="main_section_label">功能選單</string>
     <string name="main_tile_subscription_desc">追蹤每筆訂閱的費用、帳戶與到期時間</string>
     <string name="main_tile_oil_desc">抓取最新官方油價資訊並顯示更新時間</string>
-    <string name="main_tile_bank_desc">彙整銀行帳戶、存款與常用資料</string>
+    <string name="main_tile_bank_desc">彙整銀行帳戶、電子票證、存款與常用資料</string>
     <string name="main_tile_us_debt_desc">查看最新美國國債資料與更新時間</string>
     <string name="main_tile_food_desc">管理食物紀錄、價格與保存期限</string>
     <string name="main_tile_notes_desc">整理文章、連結與常用筆記</string>
@@ -116,7 +116,8 @@
     <string name="screen_subscription_subtitle">集中查看訂閱服務、到期時間與費用。</string>
     <string name="subscription_search_hint">搜尋名稱或帳戶</string>
     <string name="screen_bank_eyebrow">Banking</string>
-    <string name="screen_bank_subtitle">彙整銀行資料與總存款。</string>
+    <string name="screen_bank_subtitle">台灣的銀行才是銀行，銀行以外先歸類為電子票證。</string>
+    <string name="bank_category_note">電子票證</string>
     <string name="screen_food_eyebrow">Food</string>
     <string name="screen_food_subtitle">管理食物品項、價格與日期資訊。</string>
     <string name="food_search_hint">搜尋名稱或店家</string>
@@ -158,6 +159,13 @@
     <string name="bank_transfer_label">轉帳</string>
     <string name="bank_card_label">卡片</string>
     <string name="bank_address_label">地址</string>
+    <string name="bank_total_deposit_label">總存款</string>
+    <string name="bank_account_total_placeholder">銀行帳戶總數: 0</string>
+    <string name="bank_ticket_total_placeholder">電子票證總數: 0</string>
+    <string name="bank_account_total_format">銀行帳戶總數: %1$d</string>
+    <string name="bank_ticket_total_format">電子票證總數: %1$d</string>
+    <string name="bank_category_bank">銀行帳戶</string>
+    <string name="bank_category_ticket">電子票證</string>
 
     <string name="food_unknown_name">未命名食物</string>
     <string name="food_amount_label">數量</string>
