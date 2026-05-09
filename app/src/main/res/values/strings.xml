@@ -4,7 +4,7 @@
 
     <string name="feature_subscription">訂閱到期提醒</string>
     <string name="feature_oil">油價監控</string>
-    <string name="feature_bank">銀行統計</string>
+    <string name="feature_bank">鋒兄銀行\n(+電子票證)</string>
     <string name="feature_us_debt">US Debt</string>
     <string name="feature_food">食物管理</string>
     <string name="feature_notes">常用筆記</string>
@@ -101,7 +101,7 @@
     <string name="voice_unsupported_module">Android 版目前尚未提供「%1$s」模組</string>
     <string name="voice_unknown_home_command">聽到了「%1$s」，但找不到對應功能</string>
 
-    <string name="menu_bank_stats">銀行統計</string>
+    <string name="menu_bank_stats">鋒兄銀行\n(+電子票證)</string>
     <string name="notification_channel_name">訂閱通知</string>
     <string name="notification_channel_description">用來提醒訂閱即將到期的通知頻道</string>
 
@@ -144,7 +144,7 @@
     <string name="subscription_days_until">距離今天 %1$d 天</string>
     <string name="subscription_days_overdue">已過 %1$d 天</string>
     <string name="screen_title_subscription">訂閱到期提醒</string>
-    <string name="screen_title_bank">銀行統計</string>
+    <string name="screen_title_bank">鋒兄銀行\n(+電子票證)</string>
     <string name="screen_title_food">食物管理</string>
     <string name="screen_title_notes">常用筆記</string>
     <string name="screen_title_common">常用資料</string>
