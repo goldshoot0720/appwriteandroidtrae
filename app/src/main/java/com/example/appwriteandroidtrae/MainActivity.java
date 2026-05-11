@@ -40,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
     private Runnable sleepRunnable;
     private MaterialCardView cardSleepHint;
     private View cardFengTubeAlert;
+    private View cardShillerPeAlert;
     private TextView textSleepHintLabel;
     private TextView textSleepHint;
     private TextView textFengTubeAlertDesc;
+    private TextView textShillerPeAlertDesc;
     private TextView textCodeLineCount;
     private VoiceInputHelper voiceInputHelper;
     private static final int CODE_LINE_COUNT = 6076;
@@ -97,9 +99,11 @@ public class MainActivity extends AppCompatActivity {
         View cardLotteryReason = findViewById(R.id.cardLotteryReason);
         cardSleepHint = findViewById(R.id.cardSleepHint);
         cardFengTubeAlert = findViewById(R.id.cardFengTubeAlert);
+        cardShillerPeAlert = findViewById(R.id.cardShillerPeAlert);
         textSleepHintLabel = findViewById(R.id.textSleepHintLabel);
         textSleepHint = findViewById(R.id.textSleepHint);
         textFengTubeAlertDesc = findViewById(R.id.textFengTubeAlertDesc);
+        textShillerPeAlertDesc = findViewById(R.id.textShillerPeAlertDesc);
         textCodeLineCount = findViewById(R.id.textCodeLineCount);
         View birthdayEasterEgg = findViewById(R.id.cardBirthdayEasterEgg);
         TextView textBirthdayTitle = findViewById(R.id.textBirthdayTitle);
@@ -137,9 +141,12 @@ public class MainActivity extends AppCompatActivity {
 
         cardFengTubeAlert.setOnClickListener(v ->
                 startActivity(new Intent(MainActivity.this, FengTubeActivity.class)));
+        cardShillerPeAlert.setOnClickListener(v ->
+                startActivity(new Intent(MainActivity.this, FengFinanceActivity.class)));
 
         setupBirthdayEasterEgg(birthdayEasterEgg, textBirthdayTitle, textBirthdaySubtitle);
         checkFengTubeUpdates();
+        checkShillerPeNewHigh();
         startSleepHintScheduler();
         if (textCodeLineCount != null) {
             textCodeLineCount.setText(getString(R.string.code_line_count_label, CODE_LINE_COUNT));
@@ -313,6 +320,36 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(Exception error) {
                 runOnUiThread(() -> cardFengTubeAlert.setVisibility(View.GONE));
+            }
+        });
+    }
+
+    private void checkShillerPeNewHigh() {
+        if (cardShillerPeAlert == null || textShillerPeAlertDesc == null) {
+            return;
+        }
+        cardShillerPeAlert.setVisibility(View.GONE);
+        ShillerPeRepository.fetchLatest(new ShillerPeRepository.Callback() {
+            @Override
+            public void onSuccess(ShillerPeRepository.ShillerPeResult result) {
+                runOnUiThread(() -> {
+                    if (result.newHigh) {
+                        textShillerPeAlertDesc.setText(getString(
+                                R.string.shiller_pe_home_alert_desc,
+                                result.current,
+                                ShillerPeRepository.HISTORICAL_MAX,
+                                ShillerPeRepository.HISTORICAL_MAX_DATE
+                        ));
+                        cardShillerPeAlert.setVisibility(View.VISIBLE);
+                    } else {
+                        cardShillerPeAlert.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception error) {
+                runOnUiThread(() -> cardShillerPeAlert.setVisibility(View.GONE));
             }
         });
     }

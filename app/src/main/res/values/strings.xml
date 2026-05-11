@@ -68,6 +68,8 @@
     <string name="feng_finance_new_low">創新低</string>
     <string name="feng_finance_error_timeout">CNBC 載入逾時</string>
     <string name="feng_finance_error_parse">CNBC 資料解析失敗</string>
+    <string name="shiller_pe_home_alert_title">Shiller PE Ratio 創新高</string>
+    <string name="shiller_pe_home_alert_desc">目前 %1$.2f，已達歷史高點 %2$.2f (%3$s)。點一下查看鋒兄金融。</string>
     <string name="phone_compare_intro">輸入 iPhone、Samsung、容量或型號關鍵字，抓取地標網通與傑昇通信資料並依最低價排序。</string>
     <string name="phone_compare_query_label">關鍵字</string>
     <string name="phone_compare_query_hint">Samsung 26、iPhone 17、A17</string>

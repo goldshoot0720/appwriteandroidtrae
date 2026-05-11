@@ -63,7 +63,8 @@ public class FengFinanceActivity extends AppCompatActivity {
             new FinanceItem("NASDAQ Composite", ".IXIC", "https://www.cnbc.com/quotes/.IXIC", false),
             new FinanceItem("CBOE Volatility Index", ".VIX", "https://www.cnbc.com/quotes/.VIX", false),
             new FinanceItem("Bitcoin/USD Coin Metrics", "BTC.CM=", "https://www.cnbc.com/quotes/BTC.CM=", false),
-            new FinanceItem("Ether/USD Coin Metrics", "ETH.CM=", "https://www.cnbc.com/quotes/ETH.CM=", false)
+            new FinanceItem("Ether/USD Coin Metrics", "ETH.CM=", "https://www.cnbc.com/quotes/ETH.CM=", false),
+            new FinanceItem("Shiller PE Ratio (Max 44.19 Dec 1999)", "CAPE", ShillerPeRepository.SOURCE_URL, false, false, true)
     };
 
     @Override
@@ -208,6 +209,9 @@ public class FengFinanceActivity extends AppCompatActivity {
 
     private MarketQuote parseQuote(FinanceItem item, String pageText) {
         String text = pageText == null ? "" : pageText;
+        if (item.shillerQuote) {
+            return parseShillerPeQuote(item, text);
+        }
         String current = item.yahooQuote
                 ? findMetric(text, "成交")
                 : findCurrentValue(text, item.yieldQuote);
@@ -242,6 +246,27 @@ public class FengFinanceActivity extends AppCompatActivity {
                     getString(R.string.feng_finance_error_parse));
         }
         return new MarketQuote(item.name, item.symbol, item.url, current, dayHigh, dayLow, weekHigh, weekLow, badge);
+    }
+
+    private MarketQuote parseShillerPeQuote(FinanceItem item, String pageText) {
+        try {
+            ShillerPeRepository.ShillerPeResult result = ShillerPeRepository.parse(pageText);
+            String badge = result.newHigh ? getString(R.string.feng_finance_new_high) : "";
+            return new MarketQuote(
+                    item.name,
+                    item.symbol,
+                    item.url,
+                    String.format(Locale.US, "%.2f", result.current),
+                    "",
+                    "",
+                    String.format(Locale.US, "%.2f (%s)", ShillerPeRepository.HISTORICAL_MAX, ShillerPeRepository.HISTORICAL_MAX_DATE),
+                    "",
+                    badge
+            );
+        } catch (Exception error) {
+            return new MarketQuote(item.name, item.symbol, item.url, "", "", "", "", "",
+                    getString(R.string.feng_finance_error_parse));
+        }
     }
 
     private String findCurrentValue(String text, boolean yieldQuote) {
@@ -359,17 +384,23 @@ public class FengFinanceActivity extends AppCompatActivity {
         final String url;
         final boolean yieldQuote;
         final boolean yahooQuote;
+        final boolean shillerQuote;
 
         FinanceItem(String name, String symbol, String url, boolean yieldQuote) {
             this(name, symbol, url, yieldQuote, false);
         }
 
         FinanceItem(String name, String symbol, String url, boolean yieldQuote, boolean yahooQuote) {
+            this(name, symbol, url, yieldQuote, yahooQuote, false);
+        }
+
+        FinanceItem(String name, String symbol, String url, boolean yieldQuote, boolean yahooQuote, boolean shillerQuote) {
             this.name = name;
             this.symbol = symbol;
             this.url = url;
             this.yieldQuote = yieldQuote;
             this.yahooQuote = yahooQuote;
+            this.shillerQuote = shillerQuote;
         }
     }
 
