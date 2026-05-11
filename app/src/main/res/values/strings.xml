@@ -91,7 +91,7 @@
     <string name="voice_no_result">沒有辨識到語音內容</string>
     <string name="voice_not_available">這台裝置沒有可用的語音辨識服務</string>
     <string name="voice_prompt_home">請說出要前往的功能，例如訂閱、食品、筆記、常用、銀行、工具、手機比價。</string>
-    <string name="voice_prompt_subscription">請說出訂閱搜尋關鍵字</string>
+    <string name="voice_prompt_subscription">請說出訂閱搜尋關鍵字，或說新增一筆資料，叫做某某，日期為 2026 年 5 月 18 號上午</string>
     <string name="voice_prompt_food">請說出食品或商品搜尋關鍵字</string>
     <string name="voice_prompt_notes">請說出筆記搜尋關鍵字</string>
     <string name="voice_prompt_common">請說出常用資料搜尋關鍵字</string>
@@ -115,6 +115,7 @@
     <string name="screen_subscription_eyebrow">Subscription</string>
     <string name="screen_subscription_subtitle">集中查看訂閱服務、到期時間與費用。</string>
     <string name="subscription_search_hint">搜尋名稱或帳戶</string>
+    <string name="subscription_recent_searches_label">最近搜尋紀錄</string>
     <string name="screen_bank_eyebrow">Banking</string>
     <string name="screen_bank_subtitle">台灣的銀行才是銀行，銀行以外先歸類為電子票證。</string>
     <string name="bank_category_note">電子票證</string>
@@ -132,6 +133,8 @@
     <string name="bank_search_hint">搜尋銀行、電子票證、帳號、卡片或地址</string>
 
     <string name="subscription_alert_title">訂閱到期提醒</string>
+    <string name="subscription_voice_add_confirm_title">新增訂閱資料</string>
+    <string name="subscription_voice_add_confirm_message">名稱: %1$s\n日期: %2$s</string>
     <string name="subscription_alert_item">%1$s - %2$s (%3$s %4$s)
   %5$s</string>
     <string name="subscription_due_suffix">到期</string>

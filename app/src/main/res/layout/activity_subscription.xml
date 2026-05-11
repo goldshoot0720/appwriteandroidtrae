@@ -88,6 +88,37 @@
             android:textColorHint="@color/slate_500" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/textRecentSearches"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/subscription_recent_searches_label"
+        android:textColor="@color/sage_700"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/inputLayoutSearchSubscriptions" />
+
+    <ListView
+        android:id="@+id/listRecentSearches"
+        android:layout_width="0dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_status_chip"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textRecentSearches" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -96,7 +127,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutSearchSubscriptions" />
+        app:layout_constraintTop_toBottomOf="@id/listRecentSearches" />
 
     <ListView
         android:id="@+id/listViewSubscriptions"
@@ -112,7 +143,7 @@
         app:layout_constraintBottom_toTopOf="@id/textViewError"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/inputLayoutSearchSubscriptions" />
+        app:layout_constraintTop_toBottomOf="@id/listRecentSearches" />
 
     <TextView
         android:id="@+id/textViewError"

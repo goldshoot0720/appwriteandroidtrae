@@ -7,9 +7,12 @@ import android.app.NotificationManager;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -26,25 +29,47 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SubscriptionActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "subscription_expiry_channel";
     private static final int REQUEST_POST_NOTIFICATIONS = 1001;
+    private static final String PREFS = "subscription_prefs";
+    private static final String PREF_RECENT_SEARCHES = "subscription_recent_searches";
+    private static final int MAX_RECENT_SEARCHES = 8;
+    private static final Pattern VOICE_ADD_PATTERN = Pattern.compile(
+            ".*(?:新增|加入|建立).*?(?:叫做|名稱(?:是|為)?|名叫)(.+?)(?:，|,|\\s)*(?:日期(?:是|為)?|到期(?:日|日期)?(?:是|為)?)(.+)",
+            Pattern.CASE_INSENSITIVE
+    );
+    private static final Pattern CHINESE_DATE_PATTERN = Pattern.compile(
+            "(\\d{4})\\s*年\\s*(\\d{1,2})\\s*月\\s*(\\d{1,2})\\s*(?:日|號)?\\s*(上午|早上|下午|晚上)?\\s*(\\d{1,2})?",
+            Pattern.CASE_INSENSITIVE
+    );
 
     private ProgressBar progressBar;
     private ListView listView;
     private TextView textViewError;
+    private TextView textRecentSearches;
+    private ListView listRecentSearches;
     private TextInputEditText editTextSearchSubscriptions;
     private VoiceInputHelper voiceInputHelper;
     private ArrayAdapter<AppwriteHelper.SubscriptionItem> adapter;
+    private ArrayAdapter<String> recentSearchAdapter;
+    private final Handler searchHistoryHandler = new Handler(Looper.getMainLooper());
     private final List<AppwriteHelper.SubscriptionItem> allSubscriptionItems = new ArrayList<>();
     private final List<AppwriteHelper.SubscriptionItem> filteredSubscriptionItems = new ArrayList<>();
+    private final List<String> recentSearches = new ArrayList<>();
+    private final Runnable rememberSearchRunnable = () -> rememberSearch(getSearchText());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,17 +88,20 @@ public class SubscriptionActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         listView = findViewById(R.id.listViewSubscriptions);
         textViewError = findViewById(R.id.textViewError);
+        textRecentSearches = findViewById(R.id.textRecentSearches);
+        listRecentSearches = findViewById(R.id.listRecentSearches);
         editTextSearchSubscriptions = findViewById(R.id.editTextSearchSubscriptions);
         TextInputLayout inputLayoutSearchSubscriptions = findViewById(R.id.inputLayoutSearchSubscriptions);
         voiceInputHelper = new VoiceInputHelper(this);
-        voiceInputHelper.bindTextInput(
-                inputLayoutSearchSubscriptions,
-                editTextSearchSubscriptions,
-                R.string.voice_prompt_subscription
-        );
+        inputLayoutSearchSubscriptions.setEndIconMode(TextInputLayout.END_ICON_CUSTOM);
+        inputLayoutSearchSubscriptions.setEndIconDrawable(android.R.drawable.ic_btn_speak_now);
+        inputLayoutSearchSubscriptions.setEndIconContentDescription(getString(R.string.voice_input));
+        inputLayoutSearchSubscriptions.setEndIconOnClickListener(v ->
+                voiceInputHelper.start(getString(R.string.voice_prompt_subscription), this::handleSubscriptionVoiceText));
 
         adapter = new SubscriptionAdapter(this, filteredSubscriptionItems);
         listView.setAdapter(adapter);
+        setupRecentSearches();
 
         editTextSearchSubscriptions.addTextChangedListener(new TextWatcher() {
             @Override
@@ -87,7 +115,14 @@ public class SubscriptionActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                scheduleRememberSearch();
             }
+        });
+        editTextSearchSubscriptions.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                rememberSearch(getSearchText());
+            }
+            return false;
         });
 
         createNotificationChannel();
@@ -99,6 +134,12 @@ public class SubscriptionActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        searchHistoryHandler.removeCallbacks(rememberSearchRunnable);
+        super.onDestroy();
     }
 
     private void loadSubscriptions() {
@@ -162,6 +203,181 @@ public class SubscriptionActivity extends AppCompatActivity {
         }
 
         adapter.notifyDataSetChanged();
+    }
+
+    private void setupRecentSearches() {
+        recentSearchAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recentSearches);
+        listRecentSearches.setAdapter(recentSearchAdapter);
+        listRecentSearches.setOnItemClickListener((parent, view, position, id) -> {
+            if (position >= 0 && position < recentSearches.size()) {
+                editTextSearchSubscriptions.setText(recentSearches.get(position));
+                editTextSearchSubscriptions.setSelection(editTextSearchSubscriptions.length());
+            }
+        });
+        loadRecentSearches();
+    }
+
+    private void loadRecentSearches() {
+        recentSearches.clear();
+        String stored = getSharedPreferences(PREFS, MODE_PRIVATE).getString(PREF_RECENT_SEARCHES, "");
+        if (stored != null && !stored.isEmpty()) {
+            Collections.addAll(recentSearches, stored.split("\\n"));
+        }
+        updateRecentSearches();
+    }
+
+    private void scheduleRememberSearch() {
+        searchHistoryHandler.removeCallbacks(rememberSearchRunnable);
+        searchHistoryHandler.postDelayed(rememberSearchRunnable, 900L);
+    }
+
+    private void rememberSearch(String query) {
+        String normalized = query.trim();
+        if (normalized.isEmpty()) {
+            return;
+        }
+        recentSearches.remove(normalized);
+        recentSearches.add(0, normalized);
+        if (recentSearches.size() > MAX_RECENT_SEARCHES) {
+            recentSearches.subList(MAX_RECENT_SEARCHES, recentSearches.size()).clear();
+        }
+        persistRecentSearches();
+        updateRecentSearches();
+    }
+
+    private void persistRecentSearches() {
+        StringBuilder builder = new StringBuilder();
+        for (String item : recentSearches) {
+            if (builder.length() > 0) {
+                builder.append('\n');
+            }
+            builder.append(item.replace("\n", " ").trim());
+        }
+        getSharedPreferences(PREFS, MODE_PRIVATE)
+                .edit()
+                .putString(PREF_RECENT_SEARCHES, builder.toString())
+                .apply();
+    }
+
+    private void updateRecentSearches() {
+        boolean hasRecentSearches = !recentSearches.isEmpty();
+        textRecentSearches.setVisibility(View.VISIBLE);
+        listRecentSearches.setVisibility(hasRecentSearches ? View.VISIBLE : View.GONE);
+        recentSearchAdapter.notifyDataSetChanged();
+    }
+
+    private String getSearchText() {
+        return editTextSearchSubscriptions.getText() != null
+                ? editTextSearchSubscriptions.getText().toString()
+                : "";
+    }
+
+    private void handleSubscriptionVoiceText(String text) {
+        VoiceSubscriptionCommand command = parseVoiceSubscriptionCommand(text);
+        if (command == null) {
+            editTextSearchSubscriptions.setText(text);
+            editTextSearchSubscriptions.setSelection(editTextSearchSubscriptions.length());
+            return;
+        }
+        confirmCreateSubscription(command);
+    }
+
+    private VoiceSubscriptionCommand parseVoiceSubscriptionCommand(String text) {
+        if (text == null) {
+            return null;
+        }
+        Matcher matcher = VOICE_ADD_PATTERN.matcher(text.trim());
+        if (!matcher.matches()) {
+            return null;
+        }
+        String name = cleanVoiceName(matcher.group(1));
+        Long dateMillis = parseVoiceDate(matcher.group(2));
+        if (name.isEmpty() || dateMillis == null) {
+            return null;
+        }
+        return new VoiceSubscriptionCommand(name, dateMillis);
+    }
+
+    private String cleanVoiceName(String value) {
+        return value == null
+                ? ""
+                : value.replace("資料", "")
+                        .replace("一筆", "")
+                        .trim();
+    }
+
+    private Long parseVoiceDate(String value) {
+        Matcher matcher = CHINESE_DATE_PATTERN.matcher(value == null ? "" : value);
+        if (!matcher.find()) {
+            return null;
+        }
+        int year = Integer.parseInt(matcher.group(1));
+        int month = Integer.parseInt(matcher.group(2));
+        int day = Integer.parseInt(matcher.group(3));
+        String dayPart = matcher.group(4);
+        String hourText = matcher.group(5);
+        int hour;
+        if (hourText != null && !hourText.isEmpty()) {
+            hour = Integer.parseInt(hourText);
+            if (dayPart != null && (dayPart.contains("下午") || dayPart.contains("晚上")) && hour < 12) {
+                hour += 12;
+            }
+        } else if (dayPart != null && (dayPart.contains("下午") || dayPart.contains("晚上"))) {
+            hour = 15;
+        } else {
+            hour = 9;
+        }
+        return LocalDateTime.of(year, month, day, hour, 0)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+                .toEpochMilli();
+    }
+
+    private void confirmCreateSubscription(VoiceSubscriptionCommand command) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.subscription_voice_add_confirm_title)
+                .setMessage(getString(
+                        R.string.subscription_voice_add_confirm_message,
+                        command.name,
+                        format.format(new Date(command.nextDateMillis))
+                ))
+                .setPositiveButton(R.string.voice_confirm_apply, (dialog, which) -> createSubscription(command))
+                .setNegativeButton(R.string.ui_close, null)
+                .show();
+    }
+
+    private void createSubscription(VoiceSubscriptionCommand command) {
+        progressBar.setVisibility(View.VISIBLE);
+        AppwriteHelper.getInstance(getApplicationContext())
+                .createSubscription(command.name, command.nextDateMillis, new AppwriteHelper.DataCallback<AppwriteHelper.SubscriptionItem>() {
+                    @Override
+                    public void onSuccess(AppwriteHelper.SubscriptionItem result) {
+                        runOnUiThread(() -> {
+                            progressBar.setVisibility(View.GONE);
+                            loadSubscriptions();
+                        });
+                    }
+
+                    @Override
+                    public void onError(Exception error) {
+                        runOnUiThread(() -> {
+                            progressBar.setVisibility(View.GONE);
+                            textViewError.setVisibility(View.VISIBLE);
+                            textViewError.setText(getReadableError(error));
+                        });
+                    }
+                });
+    }
+
+    private static class VoiceSubscriptionCommand {
+        final String name;
+        final long nextDateMillis;
+
+        VoiceSubscriptionCommand(String name, long nextDateMillis) {
+            this.name = name;
+            this.nextDateMillis = nextDateMillis;
+        }
     }
 
     private void createNotificationChannel() {

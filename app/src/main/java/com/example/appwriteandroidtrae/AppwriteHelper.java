@@ -9,8 +9,10 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -297,6 +299,21 @@ public class AppwriteHelper {
         }).start();
     }
 
+    public void createSubscription(
+            final String name,
+            final long nextDateMillis,
+            final DataCallback<SubscriptionItem> callback
+    ) {
+        new Thread(() -> {
+            try {
+                SubscriptionItem item = createSubscriptionSync(name, nextDateMillis);
+                callback.onSuccess(item);
+            } catch (Exception e) {
+                callback.onError(e);
+            }
+        }).start();
+    }
+
     public void listBanks(final DataCallback<List<BankItem>> callback) {
         new Thread(() -> {
             try {
@@ -343,6 +360,26 @@ public class AppwriteHelper {
 
     public List<SubscriptionItem> listSubscriptionsSync() throws Exception {
         return fetchSubscriptions();
+    }
+
+    private SubscriptionItem createSubscriptionSync(String name, long nextDateMillis) throws Exception {
+        JSONObject data = new JSONObject();
+        data.put("name", name);
+        data.put("price", 0);
+        data.put("note", "");
+        data.put("account", "");
+        data.put("currency", "TWD");
+        data.put("continue", true);
+        data.put("nextdate", Instant.ofEpochMilli(nextDateMillis).toString());
+
+        JSONObject body = new JSONObject();
+        body.put("documentId", "unique()");
+        body.put("data", data);
+
+        String path = "/databases/" + APPWRITE_DATABASE_ID
+                + "/collections/" + APPWRITE_SUBSCRIPTION_COLLECTION_ID
+                + "/documents";
+        return parseSubscriptionDocument(new JSONObject(request("POST", path, body.toString())));
     }
 
     private List<SubscriptionItem> fetchSubscriptions() throws Exception {
@@ -521,18 +558,29 @@ public class AppwriteHelper {
         }
     }
     private String request(String path) throws Exception {
+        return request("GET", path, null);
+    }
+
+    private String request(String method, String path, String body) throws Exception {
         HttpURLConnection connection = null;
         try {
             URL url = new URL(APPWRITE_ENDPOINT + path);
             connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod(method);
             connection.setRequestProperty("X-Appwrite-Project", APPWRITE_PROJECT_ID);
+            connection.setRequestProperty("Content-Type", "application/json");
             String apiKey = getApiKey();
             if (apiKey != null && !apiKey.isEmpty()) {
                 connection.setRequestProperty("X-Appwrite-Key", apiKey);
             }
             connection.setConnectTimeout(15000);
             connection.setReadTimeout(15000);
+            if (body != null) {
+                connection.setDoOutput(true);
+                try (OutputStream outputStream = connection.getOutputStream()) {
+                    outputStream.write(body.getBytes(StandardCharsets.UTF_8));
+                }
+            }
 
             int statusCode = connection.getResponseCode();
             InputStream stream = statusCode >= 200 && statusCode < 300
@@ -575,21 +623,36 @@ public class AppwriteHelper {
             return items;
         }
         for (int i = 0; i < documents.length(); i++) {
-            JSONObject document = documents.getJSONObject(i);
-            String id = document.optString("$id");
-            String name = extractName(document, id);
-            String site = document.optString("site", "");
-            int price = document.has("price") ? document.optInt("price", -1) : -1;
-            String note = document.optString("note", "");
-            String account = document.optString("account", "");
-            String currency = document.optString("currency", "");
-            boolean continueFlag = document.optBoolean("continue", false);
-            long nextDate = extractNextDate(document);
-            long createdAtMillis = extractDateField(document, "$createdAt");
-            long updatedAtMillis = extractDateField(document, "$updatedAt");
-            items.add(new SubscriptionItem(id, name, site, price, note, account, currency, continueFlag, nextDate, createdAtMillis, updatedAtMillis));
+            items.add(parseSubscriptionDocument(documents.getJSONObject(i)));
         }
         return items;
+    }
+
+    private SubscriptionItem parseSubscriptionDocument(JSONObject document) {
+        String id = document.optString("$id");
+        String name = extractName(document, id);
+        String site = document.optString("site", "");
+        int price = document.has("price") ? document.optInt("price", -1) : -1;
+        String note = document.optString("note", "");
+        String account = document.optString("account", "");
+        String currency = document.optString("currency", "");
+        boolean continueFlag = document.optBoolean("continue", false);
+        long nextDate = extractNextDate(document);
+        long createdAtMillis = extractDateField(document, "$createdAt");
+        long updatedAtMillis = extractDateField(document, "$updatedAt");
+        return new SubscriptionItem(
+                id,
+                name,
+                site,
+                price,
+                note,
+                account,
+                currency,
+                continueFlag,
+                nextDate,
+                createdAtMillis,
+                updatedAtMillis
+        );
     }
 
     private List<BankItem> parseBanks(String json) throws JSONException {
