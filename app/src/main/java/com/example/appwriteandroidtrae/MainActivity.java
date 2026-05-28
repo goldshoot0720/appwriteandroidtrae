@@ -22,6 +22,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
 import androidx.work.PeriodicWorkRequest;
 import androidx.work.WorkManager;
 
@@ -157,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
         createNotificationChannel();
         ensureNotificationPermission();
+        enqueueImmediateSubscriptionCheck();
         scheduleDailySubscriptionCheck();
     }
 
@@ -381,12 +384,23 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void enqueueImmediateSubscriptionCheck() {
+        OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(
+                SubscriptionCheckWorker.class
+        ).build();
+        WorkManager.getInstance(getApplicationContext()).enqueueUniqueWork(
+                "subscription_check_app_start",
+                ExistingWorkPolicy.REPLACE,
+                request
+        );
+    }
+
     private void scheduleDailySubscriptionCheck() {
         long now = System.currentTimeMillis();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(now);
-        calendar.set(Calendar.HOUR_OF_DAY, 6);
-        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 5);
+        calendar.set(Calendar.MINUTE, 22);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         long firstRun = calendar.getTimeInMillis();
